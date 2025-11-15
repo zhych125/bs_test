@@ -17,26 +17,9 @@
 namespace {
 
 constexpr std::array<std::size_t, 7> kSizes{10, 50, 100, 500, 1000, 10'000, 100'000};
+constexpr std::size_t kMutationCount = 4'096;
 constexpr std::size_t kQueryCount = 4'096;
 constexpr double kHitRatio = 0.5;
-
-template <typename Iter, typename T, typename Compare>
-Iter manual_lower_bound(Iter first, Iter last, const T& value, Compare comp) {
-  using difference_type = typename std::iterator_traits<Iter>::difference_type;
-  difference_type count = std::distance(first, last);
-  while (count > 0) {
-    difference_type step = count / 2;
-    Iter mid = first;
-    std::advance(mid, step);
-    if (comp(*mid, value)) {
-      first = ++mid;
-      count -= step + 1;
-    } else {
-      count = step;
-    }
-  }
-  return first;
-}
 
 template <typename Container>
 Container make_container(const std::vector<Order>& orders);
@@ -92,6 +75,14 @@ void apply_churn(VecDeque<Order>& container, OrderGenerator& generator, std::siz
   }
 }
 
+inline void pop_front_impl(std::deque<Order>& container) { container.pop_front(); }
+inline void pop_front_impl(VecDeque<Order>& container) { container.pop_front(); }
+inline void pop_front_impl(std::vector<Order>& container) {
+  if (!container.empty()) {
+    container.erase(container.begin());
+  }
+}
+
 template <typename Container, typename Search>
 void RunBenchmark(benchmark::State& state, Search search) {
   const std::size_t size = static_cast<std::size_t>(state.range(0));
@@ -129,11 +120,49 @@ constexpr auto StdLowerBoundSearch = [](auto& container, std::uint64_t id) {
       [](const Order& lhs, std::uint64_t rhs) { return lhs.id < rhs; });
 };
 
-constexpr auto ManualLowerBoundSearch = [](auto& container, std::uint64_t id) {
-  return manual_lower_bound(
-      container.begin(), container.end(), id,
-      [](const Order& lhs, std::uint64_t rhs) { return lhs.id < rhs; });
-};
+template <typename Container>
+void RunPushBackBenchmark(benchmark::State& state) {
+  const std::size_t size = static_cast<std::size_t>(state.range(0));
+  OrderGenerator generator(555 + size);
+  Container container = make_container<Container>(generator.generate(size));
+  if constexpr (requires(Container& c, std::size_t n) { c.reserve(n); }) {
+    container.reserve(size + kMutationCount);
+  }
+
+  for (auto _ : state) {
+    state.PauseTiming();
+    container.clear();
+    state.ResumeTiming();
+    for (std::size_t i = 0; i < kMutationCount; ++i) {
+      container.push_back(generator.next_order());
+    }
+  }
+  state.SetItemsProcessed(state.iterations() * static_cast<std::int64_t>(kMutationCount));
+  state.SetComplexityN(static_cast<long>(size));
+}
+
+template <typename Container>
+void RunPopFrontBenchmark(benchmark::State& state) {
+  const std::size_t size = static_cast<std::size_t>(state.range(0));
+  OrderGenerator generator(777 + size);
+  Container container = make_container<Container>(generator.generate(size + kMutationCount));
+
+  for (auto _ : state) {
+    state.PauseTiming();
+    while (container.size() < kMutationCount) {
+      auto refill = generator.generate(kMutationCount);
+      for (const auto& order : refill) {
+        container.push_back(order);
+      }
+    }
+    state.ResumeTiming();
+    for (std::size_t i = 0; i < kMutationCount; ++i) {
+      pop_front_impl(container);
+    }
+  }
+  state.SetItemsProcessed(state.iterations() * static_cast<std::int64_t>(kMutationCount));
+  state.SetComplexityN(static_cast<long>(size));
+}
 
 template <typename Container, typename Search>
 void RegisterBenchmarks(const std::string& name, Search search) {
@@ -147,19 +176,47 @@ void RegisterBenchmarks(const std::string& name, Search search) {
   }
 }
 
+template <typename Container>
+void RegisterPushBenchmarks(const std::string& name) {
+  auto* bench = benchmark::RegisterBenchmark(
+      name.c_str(),
+      [](benchmark::State& state) {
+        RunPushBackBenchmark<Container>(state);
+      });
+  for (auto size : kSizes) {
+    bench->Arg(static_cast<int>(size));
+  }
+}
+
+template <typename Container>
+void RegisterPopBenchmarks(const std::string& name) {
+  auto* bench = benchmark::RegisterBenchmark(
+      name.c_str(),
+      [](benchmark::State& state) {
+        RunPopFrontBenchmark<Container>(state);
+      });
+  for (auto size : kSizes) {
+    bench->Arg(static_cast<int>(size));
+  }
+}
+
 }  // namespace
 
 int main(int argc, char** argv) {
   ::benchmark::Initialize(&argc, argv);
 
   RegisterBenchmarks<std::vector<Order>>("Vector/StdLowerBound", StdLowerBoundSearch);
-  RegisterBenchmarks<std::vector<Order>>("Vector/ManualLowerBound", ManualLowerBoundSearch);
 
   RegisterBenchmarks<std::deque<Order>>("Deque/StdLowerBound", StdLowerBoundSearch);
-  RegisterBenchmarks<std::deque<Order>>("Deque/ManualLowerBound", ManualLowerBoundSearch);
 
   RegisterBenchmarks<VecDeque<Order>>("VecDeque/StdLowerBound", StdLowerBoundSearch);
-  RegisterBenchmarks<VecDeque<Order>>("VecDeque/ManualLowerBound", ManualLowerBoundSearch);
+  RegisterPushBenchmarks<std::vector<Order>>("Vector/PushBack");
+  RegisterPushBenchmarks<std::deque<Order>>("Deque/PushBack");
+  RegisterPushBenchmarks<VecDeque<Order>>("VecDeque/PushBack");
+
+  RegisterPopBenchmarks<std::vector<Order>>("Vector/PopFront");
+  RegisterPopBenchmarks<std::deque<Order>>("Deque/PopFront");
+  RegisterPopBenchmarks<VecDeque<Order>>("VecDeque/PopFront");
 
   ::benchmark::RunSpecifiedBenchmarks();
   ::benchmark::Shutdown();
