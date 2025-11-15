@@ -18,7 +18,6 @@
 namespace {
 
 constexpr std::array<std::size_t, 7> kSizes{10, 50, 100, 500, 1000, 10'000, 100'000};
-constexpr std::size_t kMutationCount = 4'096;
 constexpr std::size_t kQueryCount = 4'096;
 constexpr double kHitRatio = 0.5;
 
@@ -171,19 +170,16 @@ void RunPushBackBenchmark(benchmark::State& state) {
   const std::size_t size = static_cast<std::size_t>(state.range(0));
   OrderGenerator generator(555 + size);
   Container container = make_container<Container>(generator.generate(size));
-  if constexpr (requires(Container& c, std::size_t n) { c.reserve(n); }) {
-    container.reserve(size + kMutationCount);
-  }
 
   for (auto _ : state) {
     state.PauseTiming();
     container.clear();
     state.ResumeTiming();
-    for (std::size_t i = 0; i < kMutationCount; ++i) {
+    for (std::size_t i = 0; i < size; ++i) {
       container.push_back(generator.next_order());
     }
   }
-  state.SetItemsProcessed(state.iterations() * static_cast<std::int64_t>(kMutationCount));
+  state.SetItemsProcessed(state.iterations() * static_cast<std::int64_t>(size));
   state.SetComplexityN(static_cast<long>(size));
 }
 
@@ -191,22 +187,22 @@ template <typename Container>
 void RunPopFrontBenchmark(benchmark::State& state) {
   const std::size_t size = static_cast<std::size_t>(state.range(0));
   OrderGenerator generator(777 + size);
-  Container container = make_container<Container>(generator.generate(size + kMutationCount));
+  Container container = make_container<Container>(generator.generate(size * 2));
 
   for (auto _ : state) {
     state.PauseTiming();
-    while (container.size() < kMutationCount) {
-      auto refill = generator.generate(kMutationCount);
+    while (container.size() < size) {
+      auto refill = generator.generate(size);
       for (const auto& order : refill) {
         container.push_back(order);
       }
     }
     state.ResumeTiming();
-    for (std::size_t i = 0; i < kMutationCount; ++i) {
+    for (std::size_t i = 0; i < size; ++i) {
       pop_front_impl(container);
     }
   }
-  state.SetItemsProcessed(state.iterations() * static_cast<std::int64_t>(kMutationCount));
+  state.SetItemsProcessed(state.iterations() * static_cast<std::int64_t>(size));
   state.SetComplexityN(static_cast<long>(size));
 }
 
