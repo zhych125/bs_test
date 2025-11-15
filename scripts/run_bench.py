@@ -46,14 +46,16 @@ def summarize(benchmarks):
     parts = name.split("/")
     if len(parts) < 3:
       continue
-    container, algo, size = parts[:3]
+    container = parts[0]
+    size = parts[-1]
+    algo = "/".join(parts[1:-1]) if len(parts) > 2 else ""
     try:
       size_value = int(size)
     except ValueError:
       size_value = size
     total_ns = bench["real_time"]
     items_per_second = bench.get("items_per_second")
-    per_item_ns = (1e9 / items_per_second) if items_per_second else float("nan")
+    per_item_ns = (1e9 / items_per_second) if items_per_second else None
     rows.append((container, algo, size_value, total_ns, per_item_ns, items_per_second))
   rows.sort(key=lambda r: (r[0], r[1], r[2]))
   return rows
@@ -62,7 +64,9 @@ def summarize(benchmarks):
 def print_summary(rows):
   print(f"{'Container':<10} {'Algorithm':<18} {'Size':>8} {'ns/iter':>12} {'ns/query':>12} {'items/s':>15}")
   for container, algo, size, total_ns, per_item_ns, ips in rows:
-    print(f"{container:<10} {algo:<18} {size:>8} {total_ns:12.2f} {per_item_ns:12.4f} {ips:15.2f}")
+    per_ns = f"{per_item_ns:12.4f}" if per_item_ns is not None else f"{'n/a':>12}"
+    ips_str = f"{ips:15.2f}" if ips is not None else f"{'n/a':>15}"
+    print(f"{container:<10} {algo:<18} {size:>8} {total_ns:12.2f} {per_ns} {ips_str}")
 
 
 def main():

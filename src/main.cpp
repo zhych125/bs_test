@@ -8,6 +8,7 @@
 #include <iterator>
 #include <random>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include "order.hpp"
@@ -52,6 +53,18 @@ std::size_t churn_ops_for_size(std::size_t size) {
 
 template <typename Container>
 void apply_churn(Container&, OrderGenerator&, std::size_t) {}
+
+template <>
+void apply_churn(std::vector<Order>& container, OrderGenerator& generator, std::size_t operations) {
+  if (container.empty()) {
+    return;
+  }
+  operations = std::min(operations, container.size());
+  container.erase(container.begin(), container.begin() + static_cast<std::ptrdiff_t>(operations));
+  for (std::size_t i = 0; i < operations; ++i) {
+    container.push_back(generator.next_order());
+  }
+}
 
 template <>
 void apply_churn(std::deque<Order>& container, OrderGenerator& generator, std::size_t operations) {
@@ -120,25 +133,38 @@ constexpr auto StdLowerBoundSearch = [](auto& container, std::uint64_t id) {
       [](const Order& lhs, std::uint64_t rhs) { return lhs.id < rhs; });
 };
 
-template <typename Iter, typename T, typename Compare>
-Iter branchless_lower_bound(Iter first, Iter last, const T& value, Compare comp) {
-  using difference_type = typename std::iterator_traits<Iter>::difference_type;
-  difference_type count = last - first;
-  while (count > 0) {
-    difference_type step = count >> 1;
-    Iter mid = first + step;
-    const bool less = comp(*mid, value);
-    first = less ? mid + 1 : first;
-    count = less ? (count - (step + 1)) : step;
+std::pair<std::int64_t, std::int64_t> compute_sum_bounds(const std::vector<Order>& orders) {
+  if (orders.empty()) {
+    return {0, 0};
   }
-  return first;
+  std::vector<std::int64_t> prefix;
+  prefix.reserve(orders.size());
+  std::int64_t sum = 0;
+  for (const auto& order : orders) {
+    sum += order.volume;
+    prefix.push_back(sum);
+  }
+  std::vector<std::int64_t> sorted = prefix;
+  std::sort(sorted.begin(), sorted.end());
+  auto pick = [&](double q) -> std::int64_t {
+    if (sorted.empty()) {
+      return 0;
+    }
+    const double clamped = std::clamp(q, 0.0, 1.0);
+    std::size_t idx =
+        static_cast<std::size_t>(clamped * static_cast<double>(sorted.size() - 1));
+    if (idx >= sorted.size()) {
+      idx = sorted.size() - 1;
+    }
+    return sorted[idx];
+  };
+  auto lower = pick(0.35);
+  auto upper = pick(0.65);
+  if (lower > upper) {
+    std::swap(lower, upper);
+  }
+  return {lower, upper};
 }
-
-constexpr auto BranchlessLowerBoundSearch = [](auto& container, std::uint64_t id) {
-  return branchless_lower_bound(
-      container.begin(), container.end(), id,
-      [](const Order& lhs, std::uint64_t rhs) { return lhs.id < rhs; });
-};
 
 template <typename Container>
 void RunPushBackBenchmark(benchmark::State& state) {
@@ -184,6 +210,31 @@ void RunPopFrontBenchmark(benchmark::State& state) {
   state.SetComplexityN(static_cast<long>(size));
 }
 
+template <typename Container, typename CopyFn>
+void RunBulkCopyBenchmark(benchmark::State& state, CopyFn copy_fn) {
+  const std::size_t size = static_cast<std::size_t>(state.range(0));
+  OrderGenerator generator(333 + size);
+  auto base = generator.generate(size);
+  Container container = make_container<Container>(base);
+
+  OrderGenerator churn_gen(50'000 + size);
+  apply_churn(container, churn_gen, churn_ops_for_size(size));
+  auto bounds = compute_sum_bounds(std::vector<Order>(container.begin(), container.end()));
+
+  std::size_t last_copied = 0;
+  for (auto _ : state) {
+    std::vector<Order> buffer;
+    copy_fn(container, bounds.first, bounds.second, buffer);
+    last_copied = buffer.size();
+    benchmark::DoNotOptimize(buffer.data());
+  }
+
+  const double ratio =
+      container.empty() ? 0.0 : static_cast<double>(last_copied) / container.size();
+  state.counters["selected_ratio"] = ratio;
+  state.SetComplexityN(static_cast<long>(size));
+}
+
 template <typename Container, typename Search>
 void RegisterBenchmarks(const std::string& name, Search search) {
   auto* bench = benchmark::RegisterBenchmark(name.c_str(),
@@ -220,19 +271,66 @@ void RegisterPopBenchmarks(const std::string& name) {
   }
 }
 
+template <typename Container>
+void RegisterBulkCopyBenchmarks(const std::string& prefix) {
+  auto scalar = benchmark::RegisterBenchmark(
+      (prefix + "/Scalar").c_str(),
+      [](benchmark::State& state) {
+        RunBulkCopyBenchmark<Container>(
+            state, [](const Container& cont, std::int64_t lower, std::int64_t upper, std::vector<Order>& out) {
+              std::int64_t sum = 0;
+              for (const auto& order : cont) {
+                sum += order.volume;
+                if (sum >= lower && sum <= upper) {
+                  out.push_back(order);
+                } else if (sum > upper) {
+                  break;
+                }
+              }
+            });
+      });
+  auto contiguous = benchmark::RegisterBenchmark(
+      (prefix + "/Contiguous").c_str(),
+      [](benchmark::State& state) {
+        RunBulkCopyBenchmark<Container>(
+            state, [](const Container& cont, std::int64_t lower, std::int64_t upper, std::vector<Order>& out) {
+              std::int64_t sum = 0;
+              auto first = cont.begin();
+              while (first != cont.end() && sum < lower) {
+                sum += first->volume;
+                if (sum < lower) {
+                  ++first;
+                }
+              }
+              auto last = first;
+              while (last != cont.end() && sum <= upper) {
+                sum += last->volume;
+                if (sum <= upper) {
+                  ++last;
+                }
+              }
+              if (first != cont.end() && first != last) {
+                const auto count = static_cast<std::size_t>(std::distance(first, last));
+                out.reserve(count);
+                out.insert(out.end(), first, last);
+              }
+            });
+      });
+  for (auto size : kSizes) {
+    scalar->Arg(static_cast<int>(size));
+    contiguous->Arg(static_cast<int>(size));
+  }
+}
 }  // namespace
 
 int main(int argc, char** argv) {
   ::benchmark::Initialize(&argc, argv);
 
   RegisterBenchmarks<std::vector<Order>>("Vector/StdLowerBound", StdLowerBoundSearch);
-  RegisterBenchmarks<std::vector<Order>>("Vector/BranchlessLowerBound", BranchlessLowerBoundSearch);
 
   RegisterBenchmarks<std::deque<Order>>("Deque/StdLowerBound", StdLowerBoundSearch);
-  RegisterBenchmarks<std::deque<Order>>("Deque/BranchlessLowerBound", BranchlessLowerBoundSearch);
 
   RegisterBenchmarks<VecDeque<Order>>("VecDeque/StdLowerBound", StdLowerBoundSearch);
-  RegisterBenchmarks<VecDeque<Order>>("VecDeque/BranchlessLowerBound", BranchlessLowerBoundSearch);
   RegisterPushBenchmarks<std::vector<Order>>("Vector/PushBack");
   RegisterPushBenchmarks<std::deque<Order>>("Deque/PushBack");
   RegisterPushBenchmarks<VecDeque<Order>>("VecDeque/PushBack");
@@ -240,6 +338,10 @@ int main(int argc, char** argv) {
   RegisterPopBenchmarks<std::vector<Order>>("Vector/PopFront");
   RegisterPopBenchmarks<std::deque<Order>>("Deque/PopFront");
   RegisterPopBenchmarks<VecDeque<Order>>("VecDeque/PopFront");
+
+  RegisterBulkCopyBenchmarks<std::vector<Order>>("Vector/BulkCopy");
+  RegisterBulkCopyBenchmarks<std::deque<Order>>("Deque/BulkCopy");
+  RegisterBulkCopyBenchmarks<VecDeque<Order>>("VecDeque/BulkCopy");
 
   ::benchmark::RunSpecifiedBenchmarks();
   ::benchmark::Shutdown();

@@ -11,7 +11,7 @@ Order OrderGenerator::next_order() {
   order.id = nextId_;
   nextId_ += 1 + static_cast<std::uint64_t>(rng_() & 0x3);
   order.exchangeTimestamp = baseTimestamp_ + (order.id << 5) + (rng_() & 0xFFFF);
-  order.volume = static_cast<std::int32_t>((rng_() % 2000) - 1000);
+  order.volume = static_cast<std::int32_t>(1 + (rng_() % 2000));
   order.isOwn = (rng_() & 0x1) == 0;
   return order;
 }
