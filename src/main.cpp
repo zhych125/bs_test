@@ -120,6 +120,26 @@ constexpr auto StdLowerBoundSearch = [](auto& container, std::uint64_t id) {
       [](const Order& lhs, std::uint64_t rhs) { return lhs.id < rhs; });
 };
 
+template <typename Iter, typename T, typename Compare>
+Iter branchless_lower_bound(Iter first, Iter last, const T& value, Compare comp) {
+  using difference_type = typename std::iterator_traits<Iter>::difference_type;
+  difference_type count = last - first;
+  while (count > 0) {
+    difference_type step = count >> 1;
+    Iter mid = first + step;
+    const bool less = comp(*mid, value);
+    first = less ? mid + 1 : first;
+    count = less ? (count - (step + 1)) : step;
+  }
+  return first;
+}
+
+constexpr auto BranchlessLowerBoundSearch = [](auto& container, std::uint64_t id) {
+  return branchless_lower_bound(
+      container.begin(), container.end(), id,
+      [](const Order& lhs, std::uint64_t rhs) { return lhs.id < rhs; });
+};
+
 template <typename Container>
 void RunPushBackBenchmark(benchmark::State& state) {
   const std::size_t size = static_cast<std::size_t>(state.range(0));
@@ -206,10 +226,13 @@ int main(int argc, char** argv) {
   ::benchmark::Initialize(&argc, argv);
 
   RegisterBenchmarks<std::vector<Order>>("Vector/StdLowerBound", StdLowerBoundSearch);
+  RegisterBenchmarks<std::vector<Order>>("Vector/BranchlessLowerBound", BranchlessLowerBoundSearch);
 
   RegisterBenchmarks<std::deque<Order>>("Deque/StdLowerBound", StdLowerBoundSearch);
+  RegisterBenchmarks<std::deque<Order>>("Deque/BranchlessLowerBound", BranchlessLowerBoundSearch);
 
   RegisterBenchmarks<VecDeque<Order>>("VecDeque/StdLowerBound", StdLowerBoundSearch);
+  RegisterBenchmarks<VecDeque<Order>>("VecDeque/BranchlessLowerBound", BranchlessLowerBoundSearch);
   RegisterPushBenchmarks<std::vector<Order>>("Vector/PushBack");
   RegisterPushBenchmarks<std::deque<Order>>("Deque/PushBack");
   RegisterPushBenchmarks<VecDeque<Order>>("VecDeque/PushBack");
