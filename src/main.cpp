@@ -87,14 +87,6 @@ void apply_churn(VecDeque<Order>& container, OrderGenerator& generator, std::siz
   }
 }
 
-inline void pop_front_impl(std::deque<Order>& container) { container.pop_front(); }
-inline void pop_front_impl(VecDeque<Order>& container) { container.pop_front(); }
-inline void pop_front_impl(std::vector<Order>& container) {
-  if (!container.empty()) {
-    container.erase(container.begin());
-  }
-}
-
 template <typename Container, typename Search>
 void RunBenchmark(benchmark::State& state, Search search) {
   const std::size_t size = static_cast<std::size_t>(state.range(0));
@@ -165,47 +157,6 @@ std::pair<std::int64_t, std::int64_t> compute_sum_bounds(const std::vector<Order
   return {lower, upper};
 }
 
-template <typename Container>
-void RunPushBackBenchmark(benchmark::State& state) {
-  const std::size_t size = static_cast<std::size_t>(state.range(0));
-  OrderGenerator generator(555 + size);
-  Container container = make_container<Container>(generator.generate(size));
-
-  for (auto _ : state) {
-    state.PauseTiming();
-    container.clear();
-    state.ResumeTiming();
-    for (std::size_t i = 0; i < size; ++i) {
-      container.push_back(generator.next_order());
-    }
-  }
-  state.SetItemsProcessed(state.iterations() * static_cast<std::int64_t>(size));
-  state.SetComplexityN(static_cast<long>(size));
-}
-
-template <typename Container>
-void RunPopFrontBenchmark(benchmark::State& state) {
-  const std::size_t size = static_cast<std::size_t>(state.range(0));
-  OrderGenerator generator(777 + size);
-  Container container = make_container<Container>(generator.generate(size * 2));
-
-  for (auto _ : state) {
-    state.PauseTiming();
-    while (container.size() < size) {
-      auto refill = generator.generate(size);
-      for (const auto& order : refill) {
-        container.push_back(order);
-      }
-    }
-    state.ResumeTiming();
-    for (std::size_t i = 0; i < size; ++i) {
-      pop_front_impl(container);
-    }
-  }
-  state.SetItemsProcessed(state.iterations() * static_cast<std::int64_t>(size));
-  state.SetComplexityN(static_cast<long>(size));
-}
-
 template <typename Container, typename CopyFn>
 void RunBulkCopyBenchmark(benchmark::State& state, CopyFn copy_fn) {
   const std::size_t size = static_cast<std::size_t>(state.range(0));
@@ -238,30 +189,6 @@ void RegisterBenchmarks(const std::string& name, Search search) {
                                                RunBenchmark<Container>(state, search_fn);
                                              },
                                              search);
-  for (auto size : kSizes) {
-    bench->Arg(static_cast<int>(size));
-  }
-}
-
-template <typename Container>
-void RegisterPushBenchmarks(const std::string& name) {
-  auto* bench = benchmark::RegisterBenchmark(
-      name.c_str(),
-      [](benchmark::State& state) {
-        RunPushBackBenchmark<Container>(state);
-      });
-  for (auto size : kSizes) {
-    bench->Arg(static_cast<int>(size));
-  }
-}
-
-template <typename Container>
-void RegisterPopBenchmarks(const std::string& name) {
-  auto* bench = benchmark::RegisterBenchmark(
-      name.c_str(),
-      [](benchmark::State& state) {
-        RunPopFrontBenchmark<Container>(state);
-      });
   for (auto size : kSizes) {
     bench->Arg(static_cast<int>(size));
   }
@@ -327,14 +254,6 @@ int main(int argc, char** argv) {
   RegisterBenchmarks<std::deque<Order>>("Deque/StdLowerBound", StdLowerBoundSearch);
 
   RegisterBenchmarks<VecDeque<Order>>("VecDeque/StdLowerBound", StdLowerBoundSearch);
-  RegisterPushBenchmarks<std::vector<Order>>("Vector/PushBack");
-  RegisterPushBenchmarks<std::deque<Order>>("Deque/PushBack");
-  RegisterPushBenchmarks<VecDeque<Order>>("VecDeque/PushBack");
-
-  RegisterPopBenchmarks<std::vector<Order>>("Vector/PopFront");
-  RegisterPopBenchmarks<std::deque<Order>>("Deque/PopFront");
-  RegisterPopBenchmarks<VecDeque<Order>>("VecDeque/PopFront");
-
   RegisterBulkCopyBenchmarks<std::vector<Order>>("Vector/BulkCopy");
   RegisterBulkCopyBenchmarks<std::deque<Order>>("Deque/BulkCopy");
   RegisterBulkCopyBenchmarks<VecDeque<Order>>("VecDeque/BulkCopy");
