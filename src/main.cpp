@@ -253,6 +253,58 @@ void RunBulkCopyBenchmark(benchmark::State& state, CopyFn copy_fn) {
   state.SetComplexityN(static_cast<long>(size));
 }
 
+template <typename Container, typename CopyFn>
+void RunCumsumSliceBulkCopyBenchmark(benchmark::State& state, std::size_t target_len, CopyFn copy_fn) {
+  const std::size_t size = static_cast<std::size_t>(state.range(0));
+  OrderGenerator generator(40'000 + size);
+  auto base = generator.generate(size);
+  Container container = make_container<Container>(base);
+
+  OrderGenerator churn_gen(60'000 + size);
+  apply_churn(container, churn_gen, churn_ops_for_size(size));
+
+  if (container.size() == 0 || container.size() < target_len) {
+    state.SkipWithError("Slice larger than container");
+    return;
+  }
+
+  std::vector<std::int64_t> prefix;
+  prefix.reserve(container.size());
+  std::int64_t total_volume = 0;
+  for (const auto& order : container) {
+    total_volume += order.volume;
+    prefix.push_back(total_volume);
+  }
+
+  const std::int64_t target_volume = static_cast<std::int64_t>(static_cast<double>(total_volume) * 0.3);
+  std::size_t start_idx = 0;
+  while (start_idx < prefix.size() && prefix[start_idx] < target_volume) {
+    ++start_idx;
+  }
+  if (start_idx >= container.size()) {
+    start_idx = container.size() - target_len;
+  }
+  if (start_idx + target_len > container.size()) {
+    start_idx = container.size() - target_len;
+  }
+  const std::size_t end_idx = std::min(container.size(), start_idx + target_len);
+  const std::int64_t lower_volume = (start_idx == 0) ? 0 : prefix[start_idx - 1];
+  const std::int64_t upper_volume = (end_idx == 0) ? 0 : prefix[end_idx - 1];
+
+  const std::size_t slice_len = end_idx - start_idx;
+
+  for (auto _ : state) {
+    const auto start = Clock::now();
+    std::vector<Order> buffer;
+    copy_fn(container, lower_volume, upper_volume, buffer);
+    benchmark::DoNotOptimize(buffer.data());
+    const auto finish = Clock::now();
+    state.SetIterationTime(std::chrono::duration<double>(finish - start).count());
+  }
+  state.counters["selected_ratio"] = container.empty() ? 0.0 : static_cast<double>(slice_len) / container.size();
+  state.SetComplexityN(static_cast<long>(slice_len));
+}
+
 template <typename Container>
 void RunRemoveBenchmark(benchmark::State& state) {
   const std::size_t size = static_cast<std::size_t>(state.range(0));
@@ -384,30 +436,68 @@ void RegisterBulkCopyBenchmarks<BlockOrderBook>(const std::string& prefix) {
       [](benchmark::State& state) {
         RunBulkCopyBenchmark<BlockOrderBook>(
             state, [](const BlockOrderBook& cont, std::int64_t lower, std::int64_t upper, std::vector<Order>& out) {
-              std::int64_t sum = 0;
-              auto first = cont.begin();
-              while (first != cont.end() && sum < lower) {
-                sum += first->volume;
-                if (sum < lower) {
-                  ++first;
-                }
-              }
-              auto last = first;
-              while (last != cont.end() && sum <= upper) {
-                sum += last->volume;
-                if (sum <= upper) {
-                  ++last;
-                }
-              }
-              if (first != cont.end() && first != last) {
-                cont.copy_range_including_tombstones(first, last, out);
-              }
+              cont.copy_volume_range(lower, upper, out);
             });
       });
   contiguous->UseManualTime();
   for (auto size : kSizes) {
     scalar->Arg(static_cast<int>(size));
     contiguous->Arg(static_cast<int>(size));
+  }
+}
+
+constexpr std::array<std::size_t, 5> kFixedSlices{10, 50, 100, 500, 1000};
+
+template <typename Container>
+void RegisterFixedSliceBulkCopyBenchmarks(const std::string& prefix) {
+  for (auto slice : kFixedSlices) {
+    auto* bench = benchmark::RegisterBenchmark(
+        (prefix + "/FixedSlice/" + std::to_string(slice)).c_str(),
+        [slice](benchmark::State& state) {
+          RunCumsumSliceBulkCopyBenchmark<Container>(
+              state, slice,
+              [](const Container& cont, std::int64_t lower, std::int64_t upper, std::vector<Order>& out) {
+                std::int64_t sum = 0;
+                auto it = cont.begin();
+                while (it != cont.end() && sum + it->volume <= lower) {
+                  sum += it->volume;
+                  ++it;
+                }
+                auto begin_it = it;
+                while (it != cont.end() && sum < upper) {
+                  sum += it->volume;
+                  ++it;
+                }
+                out.insert(out.end(), begin_it, it);
+              });
+        });
+    bench->UseManualTime();
+    for (auto size : kSizes) {
+      if (size >= slice) {
+        bench->Arg(static_cast<int>(size));
+      }
+    }
+  }
+}
+
+template <>
+void RegisterFixedSliceBulkCopyBenchmarks<BlockOrderBook>(const std::string& prefix) {
+  for (auto slice : kFixedSlices) {
+    auto* bench = benchmark::RegisterBenchmark(
+        (prefix + "/FixedSlice/" + std::to_string(slice)).c_str(),
+        [slice](benchmark::State& state) {
+          RunCumsumSliceBulkCopyBenchmark<BlockOrderBook>(
+              state, slice,
+              [](const BlockOrderBook& cont, std::int64_t lower, std::int64_t upper, std::vector<Order>& out) {
+                cont.copy_volume_range(lower + 1, upper, out);
+              });
+        });
+    bench->UseManualTime();
+    for (auto size : kSizes) {
+      if (size >= slice) {
+        bench->Arg(static_cast<int>(size));
+      }
+    }
   }
 }
 
@@ -438,6 +528,10 @@ int main(int argc, char** argv) {
   RegisterBulkCopyBenchmarks<std::deque<Order>>("Deque/BulkCopy");
   RegisterBulkCopyBenchmarks<VecDeque<Order>>("VecDeque/BulkCopy");
   RegisterBulkCopyBenchmarks<BlockOrderBook>("BlockOrderBook/BulkCopy");
+  RegisterFixedSliceBulkCopyBenchmarks<std::vector<Order>>("Vector/BulkCopy");
+  RegisterFixedSliceBulkCopyBenchmarks<std::deque<Order>>("Deque/BulkCopy");
+  RegisterFixedSliceBulkCopyBenchmarks<VecDeque<Order>>("VecDeque/BulkCopy");
+  RegisterFixedSliceBulkCopyBenchmarks<BlockOrderBook>("BlockOrderBook/BulkCopy");
 
   RegisterRemoveBenchmarks<std::vector<Order>>("Vector/RemoveMiddle");
   RegisterRemoveBenchmarks<std::deque<Order>>("Deque/RemoveMiddle");

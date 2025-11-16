@@ -71,6 +71,9 @@ class BlockOrderBook {
     head_ = tail_ = nullptr;
     size_ = 0;
     index_.clear();
+    block_order_.clear();
+    block_tree_.init(0);
+    total_volume_ = 0;
   }
 
   reference front() {
@@ -225,6 +228,26 @@ class BlockOrderBook {
     return true;
   }
 
+  bool update_volume(std::uint64_t id, std::int32_t new_volume) {
+    auto it = index_.find(id);
+    if (it == index_.end()) {
+      return false;
+    }
+    auto loc = it->second;
+    Slot& slot = loc.block->slots[loc.index];
+    if (!slot.live) {
+      return false;
+    }
+    Order* order = slot.ptr();
+    const std::int32_t old_volume = order->volume;
+    if (old_volume == new_volume) {
+      return true;
+    }
+    order->volume = new_volume;
+    adjust_block_volume(loc.block, static_cast<std::int64_t>(new_volume) - old_volume);
+    return true;
+  }
+
   void copy_range_including_tombstones(const_iterator first,
                                        const_iterator last,
                                        std::vector<Order>& out) const {
@@ -256,7 +279,91 @@ class BlockOrderBook {
     }
   }
 
+  void copy_volume_range(std::int64_t lower,
+                         std::int64_t upper,
+                         std::vector<Order>& out) const {
+    if (block_order_.empty() || lower > total_volume_ || lower > upper) {
+      return;
+    }
+    if (lower <= 0) {
+      lower = 1;
+    }
+    if (upper > total_volume_) {
+      upper = total_volume_;
+    }
+    auto first = find_position_by_volume(lower);
+    if (!first.first) {
+      return;
+    }
+    auto last = find_position_by_volume(upper + 1);
+    const_iterator begin_it(this, first.first, first.second);
+    const_iterator end_it(this, last.first, last.second);
+    copy_range_including_tombstones(begin_it, end_it, out);
+  }
+
  private:
+  class FenwickTree {
+   public:
+    void init(std::size_t n) { tree_.assign(n + 1, 0); }
+
+    void update(std::size_t idx, std::int64_t delta) {
+      if (tree_.empty()) {
+        return;
+      }
+      ++idx;
+      while (idx < tree_.size()) {
+        tree_[idx] += delta;
+        idx += idx & -idx;
+      }
+    }
+
+    std::int64_t prefix_sum(std::size_t idx) const {
+      if (tree_.empty()) {
+        return 0;
+      }
+      std::int64_t sum = 0;
+      ++idx;
+      while (idx > 0) {
+        sum += tree_[idx];
+        idx &= idx - 1;
+      }
+      return sum;
+    }
+
+    std::size_t size() const { return tree_.empty() ? 0 : tree_.size() - 1; }
+
+    std::int64_t total() const {
+      if (size() == 0) {
+        return 0;
+      }
+      return prefix_sum(size() - 1);
+    }
+
+    std::size_t lower_bound(std::int64_t target) const {
+      std::size_t idx = 0;
+      std::size_t bit = highest_bit();
+      while (bit != 0) {
+        std::size_t next = idx + bit;
+        if (next < tree_.size() && tree_[next] < target) {
+          idx = next;
+          target -= tree_[next];
+        }
+        bit >>= 1;
+      }
+      return idx;
+    }
+
+   private:
+    std::size_t highest_bit() const {
+      std::size_t bit = 1;
+      while (bit < tree_.size()) {
+        bit <<= 1;
+      }
+      return bit >> 1;
+    }
+
+    std::vector<std::int64_t> tree_;
+  };
   struct Slot {
     alignas(Order) unsigned char storage[sizeof(Order)];
     bool live{false};
@@ -271,6 +378,8 @@ class BlockOrderBook {
     std::size_t begin_index{0};
     std::size_t end_index{0};
     std::size_t live_count{0};
+    std::size_t order_index{0};
+    std::int64_t live_volume{0};
     std::array<Slot, kBlockCapacity> slots{};
 
     bool has_front_space() const { return begin_index > 0; }
@@ -285,7 +394,10 @@ class BlockOrderBook {
   Block* head_{nullptr};
   Block* tail_{nullptr};
   size_type size_{0};
+  std::int64_t total_volume_{0};
   absl::flat_hash_map<std::uint64_t, Location> index_;
+  std::vector<Block*> block_order_;
+  FenwickTree block_tree_;
 
   enum class BlockInit { kCentered, kFront, kBack };
 
@@ -308,11 +420,13 @@ class BlockOrderBook {
   Block* ensure_back_block() {
     if (!tail_) {
       head_ = tail_ = create_block(BlockInit::kCentered);
+      rebuild_block_index();
     }
     if (!tail_->has_back_space()) {
       Block* block = create_block(BlockInit::kBack);
       link_after(tail_, block);
       tail_ = block;
+      rebuild_block_index();
     }
     return tail_;
   }
@@ -320,11 +434,13 @@ class BlockOrderBook {
   Block* ensure_front_block() {
     if (!head_) {
       head_ = tail_ = create_block(BlockInit::kCentered);
+      rebuild_block_index();
     }
     if (!head_->has_front_space()) {
       Block* block = create_block(BlockInit::kFront);
       link_before(head_, block);
       head_ = block;
+      rebuild_block_index();
     }
     return head_;
   }
@@ -377,6 +493,7 @@ class BlockOrderBook {
       tail_ = block->prev;
     }
     delete block;
+    rebuild_block_index();
   }
 
   template <typename... Args>
@@ -388,6 +505,7 @@ class BlockOrderBook {
     size_ += 1;
     Order* ptr = slot.ptr();
     index_[ptr->id] = Location{block, idx};
+    adjust_block_volume(block, ptr->volume);
     return *ptr;
   }
 
@@ -398,6 +516,7 @@ class BlockOrderBook {
     }
     Order* value = slot.ptr();
     index_.erase(value->id);
+    adjust_block_volume(block, -value->volume);
     value->~Order();
     slot.live = false;
     block->live_count -= 1;
@@ -530,9 +649,65 @@ class BlockOrderBook {
     head_ = other.head_;
     tail_ = other.tail_;
     size_ = other.size_;
+    total_volume_ = other.total_volume_;
     index_ = std::move(other.index_);
+    block_order_ = std::move(other.block_order_);
+    block_tree_ = std::move(other.block_tree_);
     other.head_ = other.tail_ = nullptr;
     other.size_ = 0;
+    other.total_volume_ = 0;
     other.index_.clear();
+    other.block_order_.clear();
+    other.block_tree_.init(0);
+  }
+
+  void adjust_block_volume(Block* block, std::int64_t delta) {
+    block->live_volume += delta;
+    total_volume_ += delta;
+    if (!block_order_.empty()) {
+      block_tree_.update(block->order_index, delta);
+    }
+  }
+
+  void rebuild_block_index() {
+    block_order_.clear();
+    for (Block* node = head_; node; node = node->next) {
+      node->order_index = block_order_.size();
+      block_order_.push_back(node);
+    }
+    block_tree_.init(block_order_.size());
+    total_volume_ = 0;
+    for (auto* block : block_order_) {
+      total_volume_ += block->live_volume;
+      block_tree_.update(block->order_index, block->live_volume);
+    }
+  }
+
+  std::pair<Block*, std::size_t> find_position_by_volume(std::int64_t target) const {
+    if (block_order_.empty() || target <= 0) {
+      return {head_, head_ ? head_->begin_index : 0};
+    }
+    if (target > total_volume_) {
+      return {nullptr, 0};
+    }
+    std::size_t block_idx = block_tree_.lower_bound(target);
+    if (block_idx >= block_order_.size()) {
+      return {nullptr, 0};
+    }
+    Block* block = block_order_[block_idx];
+    std::int64_t sum_before = block_idx == 0 ? 0 : block_tree_.prefix_sum(block_idx - 1);
+    std::int64_t remaining = target - sum_before;
+    std::int64_t running = 0;
+    std::size_t slot = block->begin_index;
+    while (slot < block->end_index) {
+      if (block->slots[slot].live) {
+        running += block->slots[slot].ptr()->volume;
+        if (running >= remaining) {
+          return {block, slot};
+        }
+      }
+      ++slot;
+    }
+    return {block->next, block->next ? block->next->begin_index : 0};
   }
 };
