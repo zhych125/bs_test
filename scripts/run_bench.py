@@ -57,16 +57,17 @@ def summarize(benchmarks):
     items_per_second = bench.get("items_per_second")
     per_item_ns = (1e9 / items_per_second) if items_per_second else None
     rows.append((container, algo, size_value, total_ns, per_item_ns, items_per_second))
-  rows.sort(key=lambda r: (r[0], r[1], r[2]))
+  rows.sort(key=lambda r: (r[1], r[0], r[2]))
   return rows
 
 
 def print_summary(rows):
-  print(f"{'Container':<10} {'Algorithm':<18} {'Size':>8} {'ns/iter':>12} {'ns/query':>12} {'items/s':>15}")
-  for container, algo, size, total_ns, per_item_ns, ips in rows:
+  print(f"{'Container':<16} {'Algorithm':<28} {'ns/iter':>12} {'ns/query':>12} {'items/s':>15}")
+  for container, algo, _size, total_ns, per_item_ns, ips in rows:
+    total = f"{total_ns:12.2f}"
     per_ns = f"{per_item_ns:12.4f}" if per_item_ns is not None else f"{'n/a':>12}"
     ips_str = f"{ips:15.2f}" if ips is not None else f"{'n/a':>15}"
-    print(f"{container:<10} {algo:<18} {size:>8} {total_ns:12.2f} {per_ns} {ips_str}")
+    print(f"{container:<16} {algo:<28} {total} {per_ns} {ips_str}")
 
 
 def main():

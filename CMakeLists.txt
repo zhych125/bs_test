@@ -24,9 +24,16 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(benchmark)
 
+FetchContent_Declare(
+  abseil
+  GIT_REPOSITORY https://github.com/abseil/abseil-cpp.git
+  GIT_TAG 20240722.0
+)
+FetchContent_MakeAvailable(abseil)
+
 add_executable(binary_search_bench
   src/main.cpp
   src/order_generator.cpp
 )
 target_include_directories(binary_search_bench PRIVATE include)
-target_link_libraries(binary_search_bench PRIVATE benchmark::benchmark)
+target_link_libraries(binary_search_bench PRIVATE benchmark::benchmark absl::flat_hash_map)
