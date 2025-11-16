@@ -87,6 +87,23 @@ void apply_churn(VecDeque<Order>& container, OrderGenerator& generator, std::siz
   }
 }
 
+template <typename Container>
+auto find_order_iterator(Container& container, std::uint64_t id) {
+  return std::lower_bound(
+      container.begin(), container.end(), id,
+      [](const Order& lhs, std::uint64_t rhs) { return lhs.id < rhs; });
+}
+
+template <typename Container>
+bool erase_order(Container& container, std::uint64_t id) {
+  auto it = find_order_iterator(container, id);
+  if (it == container.end() || it->id != id) {
+    return false;
+  }
+  container.erase(it);
+  return true;
+}
+
 template <typename Container, typename Search>
 void RunBenchmark(benchmark::State& state, Search search) {
   const std::size_t size = static_cast<std::size_t>(state.range(0));
@@ -182,6 +199,51 @@ void RunBulkCopyBenchmark(benchmark::State& state, CopyFn copy_fn) {
   state.SetComplexityN(static_cast<long>(size));
 }
 
+template <typename Container>
+void RunRemoveBenchmark(benchmark::State& state) {
+  const std::size_t size = static_cast<std::size_t>(state.range(0));
+  OrderGenerator base_gen(600 + size);
+  Container container = make_container<Container>(base_gen.generate(size));
+
+  OrderGenerator churn_gen(70'000 + size);
+  apply_churn(container, churn_gen, churn_ops_for_size(size));
+
+  OrderGenerator replenish_gen(90'000 + size);
+  std::vector<std::uint64_t> removal_ids;
+  removal_ids.reserve(container.size());
+  for (const auto& order : container) {
+    removal_ids.push_back(order.id);
+  }
+  std::mt19937_64 remove_rng(1'000 + size);
+  std::uint64_t checksum = 0;
+
+  for (auto _ : state) {
+    if (removal_ids.empty()) {
+      break;
+    }
+    std::size_t idx = static_cast<std::size_t>(remove_rng() % removal_ids.size());
+    const auto target_id = removal_ids[idx];
+
+    bool removed = erase_order(container, target_id);
+    checksum += removed ? target_id : 0;
+    if (removed) {
+      removal_ids[idx] = removal_ids.back();
+      removal_ids.pop_back();
+    }
+
+    state.PauseTiming();
+    if (removed) {
+      auto new_order = replenish_gen.next_order();
+      container.push_back(new_order);
+      removal_ids.push_back(new_order.id);
+    }
+    state.ResumeTiming();
+  }
+  benchmark::DoNotOptimize(checksum);
+  state.SetItemsProcessed(state.iterations());
+  state.SetComplexityN(static_cast<long>(size));
+}
+
 template <typename Container, typename Search>
 void RegisterBenchmarks(const std::string& name, Search search) {
   auto* bench = benchmark::RegisterBenchmark(name.c_str(),
@@ -244,6 +306,18 @@ void RegisterBulkCopyBenchmarks(const std::string& prefix) {
     contiguous->Arg(static_cast<int>(size));
   }
 }
+
+template <typename Container>
+void RegisterRemoveBenchmarks(const std::string& name) {
+  auto* bench = benchmark::RegisterBenchmark(
+      name.c_str(),
+      [](benchmark::State& state) {
+        RunRemoveBenchmark<Container>(state);
+      });
+  for (auto size : kSizes) {
+    bench->Arg(static_cast<int>(size));
+  }
+}
 }  // namespace
 
 int main(int argc, char** argv) {
@@ -257,6 +331,10 @@ int main(int argc, char** argv) {
   RegisterBulkCopyBenchmarks<std::vector<Order>>("Vector/BulkCopy");
   RegisterBulkCopyBenchmarks<std::deque<Order>>("Deque/BulkCopy");
   RegisterBulkCopyBenchmarks<VecDeque<Order>>("VecDeque/BulkCopy");
+
+  RegisterRemoveBenchmarks<std::vector<Order>>("Vector/RemoveMiddle");
+  RegisterRemoveBenchmarks<std::deque<Order>>("Deque/RemoveMiddle");
+  RegisterRemoveBenchmarks<VecDeque<Order>>("VecDeque/RemoveMiddle");
 
   ::benchmark::RunSpecifiedBenchmarks();
   ::benchmark::Shutdown();

@@ -195,6 +195,26 @@ class VecDeque {
   const_iterator cbegin() const { return begin(); }
   const_iterator cend() const { return end(); }
 
+  iterator erase(iterator pos) {
+    if (pos == end()) {
+      return pos;
+    }
+    size_type idx = pos - begin();
+    if (idx < size_ / 2) {
+      for (size_type i = idx; i > 0; --i) {
+        (*this)[i] = std::move((*this)[i - 1]);
+      }
+      pop_front();
+      return iterator(this, idx);
+    } else {
+      for (size_type i = idx; i + 1 < size_; ++i) {
+        (*this)[i] = std::move((*this)[i + 1]);
+      }
+      pop_back();
+      return iterator(this, idx);
+    }
+  }
+
  private:
   using AllocTraits = std::allocator_traits<Allocator>;
 
