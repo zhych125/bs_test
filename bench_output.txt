@@ -1,428 +1,512 @@
 ---------------------------------------------------------------------------------------------------------------------
 Benchmark                                                           Time             CPU   Iterations UserCounters...
 ---------------------------------------------------------------------------------------------------------------------
-Vector/StdLowerBound/10/manual_time                             13255 ns        13280 ns         1056 items_per_second=309.009M/s
-Vector/StdLowerBound/50/manual_time                             27234 ns        27250 ns          515 items_per_second=150.398M/s
-Vector/StdLowerBound/100/manual_time                            31261 ns        31281 ns          452 items_per_second=131.028M/s
-Vector/StdLowerBound/500/manual_time                            38112 ns        38133 ns          369 items_per_second=107.473M/s
-Vector/StdLowerBound/1000/manual_time                           45176 ns        45192 ns          312 items_per_second=90.6679M/s
-Vector/StdLowerBound/10000/manual_time                         101571 ns       101588 ns          136 items_per_second=40.3265M/s
-Vector/StdLowerBound/100000/manual_time                        147054 ns       147074 ns           95 items_per_second=27.8537M/s
-Deque/StdLowerBound/10/manual_time                              18070 ns        18089 ns          798 items_per_second=226.677M/s
-Deque/StdLowerBound/50/manual_time                              31526 ns        31546 ns          449 items_per_second=129.925M/s
-Deque/StdLowerBound/100/manual_time                             33755 ns        33775 ns          413 items_per_second=121.345M/s
-Deque/StdLowerBound/500/manual_time                             70263 ns        70284 ns          197 items_per_second=58.2955M/s
-Deque/StdLowerBound/1000/manual_time                            58372 ns        58391 ns          238 items_per_second=70.1708M/s
-Deque/StdLowerBound/10000/manual_time                          124954 ns       124989 ns           88 items_per_second=32.7801M/s
-Deque/StdLowerBound/100000/manual_time                         330862 ns       330976 ns           41 items_per_second=12.3798M/s
-VecDeque/StdLowerBound/10/manual_time                           16816 ns        16835 ns          807 items_per_second=243.584M/s
-VecDeque/StdLowerBound/50/manual_time                           30708 ns        30710 ns          459 items_per_second=133.384M/s
-VecDeque/StdLowerBound/100/manual_time                          37941 ns        37962 ns          368 items_per_second=107.957M/s
-VecDeque/StdLowerBound/500/manual_time                          46184 ns        46205 ns          303 items_per_second=88.6882M/s
-VecDeque/StdLowerBound/1000/manual_time                         54558 ns        54576 ns          257 items_per_second=75.0756M/s
-VecDeque/StdLowerBound/10000/manual_time                       126733 ns       126755 ns          110 items_per_second=32.32M/s
-VecDeque/StdLowerBound/100000/manual_time                      187510 ns       187541 ns           74 items_per_second=21.8442M/s
-BlockOrderBook/StdLowerBound/10/manual_time                     67027 ns        67050 ns          199 items_per_second=61.1093M/s
-BlockOrderBook/StdLowerBound/50/manual_time                    272607 ns       272654 ns           52 items_per_second=15.0253M/s
-BlockOrderBook/StdLowerBound/100/manual_time                   569487 ns       569520 ns           25 items_per_second=7.19244M/s
-BlockOrderBook/StdLowerBound/500/manual_time                  3007509 ns      3007600 ns            5 items_per_second=1.36192M/s
-BlockOrderBook/StdLowerBound/1000/manual_time                 5960125 ns      5960000 ns            2 items_per_second=687.234k/s
-BlockOrderBook/StdLowerBound/10000/manual_time               60926125 ns     60926000 ns            1 items_per_second=67.229k/s
-BlockOrderBook/StdLowerBound/100000/manual_time             599839000 ns    599834000 ns            1 items_per_second=6.8285k/s
-Vector/BulkCopy/Scalar/10/manual_time                            23.6 ns         55.5 ns       592317 selected_ratio=0.2
-Vector/BulkCopy/Scalar/50/manual_time                             122 ns          187 ns       113617 selected_ratio=0.38
-Vector/BulkCopy/Scalar/100/manual_time                            177 ns          229 ns        78203 selected_ratio=0.38
-Vector/BulkCopy/Scalar/500/manual_time                            410 ns          482 ns        34761 selected_ratio=0.27
-Vector/BulkCopy/Scalar/1000/manual_time                           690 ns          774 ns        20592 selected_ratio=0.292
-Vector/BulkCopy/Scalar/10000/manual_time                         5640 ns         7224 ns         2464 selected_ratio=0.2975
-Vector/BulkCopy/Scalar/100000/manual_time                       75736 ns        93719 ns          192 selected_ratio=0.29995
-Vector/BulkCopy/Contiguous/10/manual_time                        18.4 ns         46.1 ns       772911 selected_ratio=0.1
-Vector/BulkCopy/Contiguous/50/manual_time                        71.8 ns          120 ns       196204 selected_ratio=0.34
-Vector/BulkCopy/Contiguous/100/manual_time                        126 ns          188 ns       111815 selected_ratio=0.33
-Vector/BulkCopy/Contiguous/500/manual_time                        609 ns          669 ns        23029 selected_ratio=0.27
-Vector/BulkCopy/Contiguous/1000/manual_time                      1246 ns         1323 ns        11369 selected_ratio=0.288
-Vector/BulkCopy/Contiguous/10000/manual_time                     9933 ns        11361 ns         1457 selected_ratio=0.2993
-Vector/BulkCopy/Contiguous/100000/manual_time                   49239 ns        66130 ns          285 selected_ratio=0.29992
-Deque/BulkCopy/Scalar/10/manual_time                             25.7 ns         58.6 ns       539950 selected_ratio=0.2
-Deque/BulkCopy/Scalar/50/manual_time                              131 ns          194 ns       106021 selected_ratio=0.4
-Deque/BulkCopy/Scalar/100/manual_time                             202 ns          254 ns        69933 selected_ratio=0.35
-Deque/BulkCopy/Scalar/500/manual_time                             452 ns          538 ns        31355 selected_ratio=0.256
-Deque/BulkCopy/Scalar/1000/manual_time                            822 ns          916 ns        16950 selected_ratio=0.295
-Deque/BulkCopy/Scalar/10000/manual_time                          5927 ns         6762 ns         2360 selected_ratio=0.2975
-Deque/BulkCopy/Scalar/100000/manual_time                        53244 ns        62857 ns          258 selected_ratio=0.29997
-Deque/BulkCopy/Contiguous/10/manual_time                         18.9 ns         51.0 ns       741602 selected_ratio=0.1
-Deque/BulkCopy/Contiguous/50/manual_time                         35.1 ns         91.1 ns       393919 selected_ratio=0.34
-Deque/BulkCopy/Contiguous/100/manual_time                        55.0 ns          119 ns       240839 selected_ratio=0.34
-Deque/BulkCopy/Contiguous/500/manual_time                         189 ns          258 ns        74057 selected_ratio=0.262
-Deque/BulkCopy/Contiguous/1000/manual_time                        366 ns          454 ns        37994 selected_ratio=0.293
-Deque/BulkCopy/Contiguous/10000/manual_time                      4407 ns         5147 ns         2969 selected_ratio=0.2984
-Deque/BulkCopy/Contiguous/100000/manual_time                    39939 ns        48991 ns          351 selected_ratio=0.29995
-VecDeque/BulkCopy/Scalar/10/manual_time                          23.8 ns         59.4 ns       589811 selected_ratio=0.2
-VecDeque/BulkCopy/Scalar/50/manual_time                           125 ns          197 ns       111160 selected_ratio=0.38
-VecDeque/BulkCopy/Scalar/100/manual_time                          188 ns          250 ns        72722 selected_ratio=0.34
-VecDeque/BulkCopy/Scalar/500/manual_time                          470 ns          574 ns        29944 selected_ratio=0.27
-VecDeque/BulkCopy/Scalar/1000/manual_time                         831 ns          965 ns        16950 selected_ratio=0.295
-VecDeque/BulkCopy/Scalar/10000/manual_time                       6372 ns         7881 ns         2197 selected_ratio=0.2969
-VecDeque/BulkCopy/Scalar/100000/manual_time                     75476 ns        94516 ns          186 selected_ratio=0.29991
-VecDeque/BulkCopy/Contiguous/10/manual_time                      21.0 ns         51.1 ns       666557 selected_ratio=0.1
-VecDeque/BulkCopy/Contiguous/50/manual_time                       114 ns          168 ns       124183 selected_ratio=0.36
-VecDeque/BulkCopy/Contiguous/100/manual_time                      204 ns          275 ns        67692 selected_ratio=0.33
-VecDeque/BulkCopy/Contiguous/500/manual_time                      597 ns          683 ns        23773 selected_ratio=0.258
-VecDeque/BulkCopy/Contiguous/1000/manual_time                    1199 ns         1314 ns        13205 selected_ratio=0.284
-VecDeque/BulkCopy/Contiguous/10000/manual_time                  10648 ns        12111 ns         1356 selected_ratio=0.2987
-VecDeque/BulkCopy/Contiguous/100000/manual_time                 57871 ns        76539 ns          245 selected_ratio=0.29995
-BlockOrderBook/BulkCopy/Scalar/10/manual_time                    69.5 ns          138 ns       195207 selected_ratio=0.2
-BlockOrderBook/BulkCopy/Scalar/50/manual_time                     227 ns          304 ns        61482 selected_ratio=0.24
-BlockOrderBook/BulkCopy/Scalar/100/manual_time                    336 ns          419 ns        41883 selected_ratio=0.36
-BlockOrderBook/BulkCopy/Scalar/500/manual_time                   1179 ns         1256 ns        10000 selected_ratio=0.288
-BlockOrderBook/BulkCopy/Scalar/1000/manual_time                  2058 ns         2145 ns         9207 selected_ratio=0.281
-BlockOrderBook/BulkCopy/Scalar/10000/manual_time                10048 ns        10159 ns         1401 selected_ratio=0.2989
-BlockOrderBook/BulkCopy/Scalar/100000/manual_time              103346 ns       103746 ns          138 selected_ratio=0.29994
-BlockOrderBook/BulkCopy/Contiguous/10/manual_time                60.3 ns          129 ns       232185 selected_ratio=0.6
-BlockOrderBook/BulkCopy/Contiguous/50/manual_time                 116 ns          177 ns       120500 selected_ratio=1.42
-BlockOrderBook/BulkCopy/Contiguous/100/manual_time                174 ns          241 ns        83219 selected_ratio=1.27
-BlockOrderBook/BulkCopy/Contiguous/500/manual_time                399 ns          469 ns        35706 selected_ratio=0.77
-BlockOrderBook/BulkCopy/Contiguous/1000/manual_time               752 ns          833 ns        18950 selected_ratio=0.874
-BlockOrderBook/BulkCopy/Contiguous/10000/manual_time             3614 ns         3730 ns         4647 selected_ratio=0.4466
-BlockOrderBook/BulkCopy/Contiguous/100000/manual_time           30151 ns        30536 ns          476 selected_ratio=0.30159
-Vector/BulkCopy/FixedSlice/10/10/manual_time                     17.4 ns         43.2 ns       805876 selected_ratio=1
-Vector/BulkCopy/FixedSlice/10/50/manual_time                     17.5 ns         42.8 ns       789057 selected_ratio=0.2
-Vector/BulkCopy/FixedSlice/10/100/manual_time                    17.8 ns         42.6 ns       809612 selected_ratio=0.1
-Vector/BulkCopy/FixedSlice/10/500/manual_time                    50.5 ns         75.3 ns       276817 selected_ratio=0.02
-Vector/BulkCopy/FixedSlice/10/1000/manual_time                    105 ns          130 ns       130852 selected_ratio=0.01
-Vector/BulkCopy/FixedSlice/10/10000/manual_time                   743 ns          768 ns        18837 selected_ratio=1m
-Vector/BulkCopy/FixedSlice/10/100000/manual_time                 7584 ns         7611 ns         1856 selected_ratio=100u
-Vector/BulkCopy/FixedSlice/50/50/manual_time                     29.2 ns         54.5 ns       482294 selected_ratio=1
-Vector/BulkCopy/FixedSlice/50/100/manual_time                    43.1 ns         68.7 ns       329258 selected_ratio=0.5
-Vector/BulkCopy/FixedSlice/50/500/manual_time                    80.8 ns          105 ns       173758 selected_ratio=0.1
-Vector/BulkCopy/FixedSlice/50/1000/manual_time                    135 ns          160 ns       102715 selected_ratio=0.05
-Vector/BulkCopy/FixedSlice/50/10000/manual_time                   784 ns          809 ns        17755 selected_ratio=5m
-Vector/BulkCopy/FixedSlice/50/100000/manual_time                 7481 ns         7506 ns         1880 selected_ratio=500u
-Vector/BulkCopy/FixedSlice/100/100/manual_time                   63.8 ns         88.9 ns       217909 selected_ratio=1
-Vector/BulkCopy/FixedSlice/100/500/manual_time                    115 ns          139 ns       125486 selected_ratio=0.2
-Vector/BulkCopy/FixedSlice/100/1000/manual_time                   166 ns          191 ns        83583 selected_ratio=0.1
-Vector/BulkCopy/FixedSlice/100/10000/manual_time                  817 ns          842 ns        17096 selected_ratio=0.01
-Vector/BulkCopy/FixedSlice/100/100000/manual_time                7467 ns         7495 ns         1873 selected_ratio=1m
-Vector/BulkCopy/FixedSlice/500/500/manual_time                    308 ns          334 ns        45312 selected_ratio=1
-Vector/BulkCopy/FixedSlice/500/1000/manual_time                   408 ns          433 ns        34149 selected_ratio=0.5
-Vector/BulkCopy/FixedSlice/500/10000/manual_time                 1070 ns         1095 ns        13121 selected_ratio=0.05
-Vector/BulkCopy/FixedSlice/500/100000/manual_time                7517 ns         7550 ns         1797 selected_ratio=5m
-Vector/BulkCopy/FixedSlice/1000/1000/manual_time                  571 ns          596 ns        24574 selected_ratio=1
-Vector/BulkCopy/FixedSlice/1000/10000/manual_time                1800 ns         1833 ns         5793 selected_ratio=0.1
-Vector/BulkCopy/FixedSlice/1000/100000/manual_time               8074 ns         8110 ns         1747 selected_ratio=0.01
-Deque/BulkCopy/FixedSlice/10/10/manual_time                      19.2 ns         46.2 ns       722745 selected_ratio=1
-Deque/BulkCopy/FixedSlice/10/50/manual_time                      20.5 ns         46.0 ns       679005 selected_ratio=0.2
-Deque/BulkCopy/FixedSlice/10/100/manual_time                     25.5 ns         50.8 ns       551974 selected_ratio=0.1
-Deque/BulkCopy/FixedSlice/10/500/manual_time                     67.4 ns         92.3 ns       207724 selected_ratio=0.02
-Deque/BulkCopy/FixedSlice/10/1000/manual_time                     135 ns          159 ns       103464 selected_ratio=0.01
-Deque/BulkCopy/FixedSlice/10/10000/manual_time                   1115 ns         1139 ns        12400 selected_ratio=1m
-Deque/BulkCopy/FixedSlice/10/100000/manual_time                 11105 ns        11131 ns         1265 selected_ratio=100u
-Deque/BulkCopy/FixedSlice/50/50/manual_time                      46.9 ns         71.3 ns       300002 selected_ratio=1
-Deque/BulkCopy/FixedSlice/50/100/manual_time                     60.2 ns         84.6 ns       230070 selected_ratio=0.5
-Deque/BulkCopy/FixedSlice/50/500/manual_time                      103 ns          127 ns       137614 selected_ratio=0.1
-Deque/BulkCopy/FixedSlice/50/1000/manual_time                     171 ns          195 ns        82117 selected_ratio=0.05
-Deque/BulkCopy/FixedSlice/50/10000/manual_time                   1143 ns         1167 ns        12295 selected_ratio=5m
-Deque/BulkCopy/FixedSlice/50/100000/manual_time                 11000 ns        11025 ns         1275 selected_ratio=500u
-Deque/BulkCopy/FixedSlice/100/100/manual_time                    97.6 ns          122 ns       142452 selected_ratio=1
-Deque/BulkCopy/FixedSlice/100/500/manual_time                     153 ns          178 ns        91309 selected_ratio=0.2
-Deque/BulkCopy/FixedSlice/100/1000/manual_time                    218 ns          242 ns        63877 selected_ratio=0.1
-Deque/BulkCopy/FixedSlice/100/10000/manual_time                  1190 ns         1214 ns        11314 selected_ratio=0.01
-Deque/BulkCopy/FixedSlice/100/100000/manual_time                11100 ns        11122 ns         1275 selected_ratio=1m
-Deque/BulkCopy/FixedSlice/500/500/manual_time                     458 ns          483 ns        30816 selected_ratio=1
-Deque/BulkCopy/FixedSlice/500/1000/manual_time                    539 ns          562 ns        25046 selected_ratio=0.5
-Deque/BulkCopy/FixedSlice/500/10000/manual_time                  1585 ns         1608 ns         9118 selected_ratio=0.05
-Deque/BulkCopy/FixedSlice/500/100000/manual_time                11582 ns        11616 ns         1202 selected_ratio=5m
-Deque/BulkCopy/FixedSlice/1000/1000/manual_time                   865 ns          891 ns        16174 selected_ratio=1
-Deque/BulkCopy/FixedSlice/1000/10000/manual_time                 2175 ns         2208 ns         5982 selected_ratio=0.1
-Deque/BulkCopy/FixedSlice/1000/100000/manual_time               12250 ns        12285 ns         1132 selected_ratio=0.01
-VecDeque/BulkCopy/FixedSlice/10/10/manual_time                   20.3 ns         46.3 ns       680822 selected_ratio=1
-VecDeque/BulkCopy/FixedSlice/10/50/manual_time                   24.2 ns         49.6 ns       581078 selected_ratio=0.2
-VecDeque/BulkCopy/FixedSlice/10/100/manual_time                  27.6 ns         53.0 ns       501857 selected_ratio=0.1
-VecDeque/BulkCopy/FixedSlice/10/500/manual_time                  74.5 ns        100.0 ns       184618 selected_ratio=0.02
-VecDeque/BulkCopy/FixedSlice/10/1000/manual_time                  132 ns          158 ns       106026 selected_ratio=0.01
-VecDeque/BulkCopy/FixedSlice/10/10000/manual_time                1069 ns         1094 ns        13093 selected_ratio=1m
-VecDeque/BulkCopy/FixedSlice/10/100000/manual_time              10733 ns        10760 ns         1319 selected_ratio=100u
-VecDeque/BulkCopy/FixedSlice/50/50/manual_time                   54.2 ns         79.5 ns       258050 selected_ratio=1
-VecDeque/BulkCopy/FixedSlice/50/100/manual_time                  61.9 ns         87.2 ns       226815 selected_ratio=0.5
-VecDeque/BulkCopy/FixedSlice/50/500/manual_time                   108 ns          133 ns       128486 selected_ratio=0.1
-VecDeque/BulkCopy/FixedSlice/50/1000/manual_time                  166 ns          191 ns        84103 selected_ratio=0.05
-VecDeque/BulkCopy/FixedSlice/50/10000/manual_time                1099 ns         1124 ns        12733 selected_ratio=5m
-VecDeque/BulkCopy/FixedSlice/50/100000/manual_time              10633 ns        10658 ns         1331 selected_ratio=500u
-VecDeque/BulkCopy/FixedSlice/100/100/manual_time                 92.6 ns          118 ns       150703 selected_ratio=1
-VecDeque/BulkCopy/FixedSlice/100/500/manual_time                  152 ns          178 ns        92082 selected_ratio=0.2
-VecDeque/BulkCopy/FixedSlice/100/1000/manual_time                 207 ns          233 ns        67592 selected_ratio=0.1
-VecDeque/BulkCopy/FixedSlice/100/10000/manual_time               1146 ns         1171 ns        12239 selected_ratio=0.01
-VecDeque/BulkCopy/FixedSlice/100/100000/manual_time             10650 ns        10675 ns         1285 selected_ratio=1m
-VecDeque/BulkCopy/FixedSlice/500/500/manual_time                  431 ns          456 ns        32808 selected_ratio=1
-VecDeque/BulkCopy/FixedSlice/500/1000/manual_time                 551 ns          576 ns        25199 selected_ratio=0.5
-VecDeque/BulkCopy/FixedSlice/500/10000/manual_time               1491 ns         1517 ns         9242 selected_ratio=0.05
-VecDeque/BulkCopy/FixedSlice/500/100000/manual_time             10961 ns        10994 ns         1269 selected_ratio=5m
-VecDeque/BulkCopy/FixedSlice/1000/1000/manual_time                855 ns          881 ns        16338 selected_ratio=1
-VecDeque/BulkCopy/FixedSlice/1000/10000/manual_time              2077 ns         2106 ns         6651 selected_ratio=0.1
-VecDeque/BulkCopy/FixedSlice/1000/100000/manual_time            11485 ns        11516 ns         1224 selected_ratio=0.01
-BlockOrderBook/BulkCopy/FixedSlice/10/10/manual_time             21.3 ns         47.0 ns       659766 selected_ratio=1
-BlockOrderBook/BulkCopy/FixedSlice/10/50/manual_time             32.5 ns         58.2 ns       426963 selected_ratio=0.2
-BlockOrderBook/BulkCopy/FixedSlice/10/100/manual_time            27.5 ns         53.2 ns       511110 selected_ratio=0.1
-BlockOrderBook/BulkCopy/FixedSlice/10/500/manual_time            50.5 ns         75.8 ns       272623 selected_ratio=0.02
-BlockOrderBook/BulkCopy/FixedSlice/10/1000/manual_time           23.0 ns         48.3 ns       616061 selected_ratio=0.01
-BlockOrderBook/BulkCopy/FixedSlice/10/10000/manual_time          38.3 ns         64.2 ns       363421 selected_ratio=1m
-BlockOrderBook/BulkCopy/FixedSlice/10/100000/manual_time         66.8 ns         92.2 ns       219839 selected_ratio=100u
-BlockOrderBook/BulkCopy/FixedSlice/50/50/manual_time             52.9 ns         78.2 ns       261202 selected_ratio=1
-BlockOrderBook/BulkCopy/FixedSlice/50/100/manual_time            81.1 ns          106 ns       178773 selected_ratio=0.5
-BlockOrderBook/BulkCopy/FixedSlice/50/500/manual_time            81.4 ns          106 ns       174039 selected_ratio=0.1
-BlockOrderBook/BulkCopy/FixedSlice/50/1000/manual_time           78.6 ns          104 ns       179851 selected_ratio=0.05
-BlockOrderBook/BulkCopy/FixedSlice/50/10000/manual_time          89.0 ns          114 ns       157380 selected_ratio=5m
-BlockOrderBook/BulkCopy/FixedSlice/50/100000/manual_time         92.1 ns          117 ns       153008 selected_ratio=500u
-BlockOrderBook/BulkCopy/FixedSlice/100/100/manual_time            109 ns          134 ns       131187 selected_ratio=1
-BlockOrderBook/BulkCopy/FixedSlice/100/500/manual_time            120 ns          145 ns       118326 selected_ratio=0.2
-BlockOrderBook/BulkCopy/FixedSlice/100/1000/manual_time           118 ns          143 ns       118193 selected_ratio=0.1
-BlockOrderBook/BulkCopy/FixedSlice/100/10000/manual_time          128 ns          153 ns       109507 selected_ratio=0.01
-BlockOrderBook/BulkCopy/FixedSlice/100/100000/manual_time         122 ns          147 ns       116593 selected_ratio=1m
-BlockOrderBook/BulkCopy/FixedSlice/500/500/manual_time            459 ns          484 ns        30729 selected_ratio=1
-BlockOrderBook/BulkCopy/FixedSlice/500/1000/manual_time           422 ns          447 ns        31946 selected_ratio=0.5
-BlockOrderBook/BulkCopy/FixedSlice/500/10000/manual_time          442 ns          467 ns        31866 selected_ratio=0.05
-BlockOrderBook/BulkCopy/FixedSlice/500/100000/manual_time         480 ns          506 ns        29856 selected_ratio=5m
-BlockOrderBook/BulkCopy/FixedSlice/1000/1000/manual_time          807 ns          833 ns        17330 selected_ratio=1
-BlockOrderBook/BulkCopy/FixedSlice/1000/10000/manual_time         922 ns          947 ns        16067 selected_ratio=0.1
-BlockOrderBook/BulkCopy/FixedSlice/1000/100000/manual_time        846 ns          871 ns        15482 selected_ratio=0.01
-Vector/RemoveMiddle/10/manual_time                               12.7 ns         32.2 ns      1106626 items_per_second=78.4635M/s
-Vector/RemoveMiddle/50/manual_time                               16.3 ns         36.4 ns       867488 items_per_second=61.5099M/s
-Vector/RemoveMiddle/100/manual_time                              19.3 ns         39.5 ns       723642 items_per_second=51.8976M/s
-Vector/RemoveMiddle/500/manual_time                              32.0 ns         52.6 ns       441362 items_per_second=31.2961M/s
-Vector/RemoveMiddle/1000/manual_time                             43.7 ns         64.3 ns       312018 items_per_second=22.8801M/s
-Vector/RemoveMiddle/10000/manual_time                            1162 ns         1187 ns         8801 items_per_second=860.311k/s
-Vector/RemoveMiddle/100000/manual_time                          17443 ns        17489 ns          802 items_per_second=57.3289k/s
-Deque/RemoveMiddle/10/manual_time                                14.7 ns         34.1 ns       907565 items_per_second=68.0683M/s
-Deque/RemoveMiddle/50/manual_time                                20.8 ns         40.9 ns       676939 items_per_second=48.1792M/s
-Deque/RemoveMiddle/100/manual_time                               25.6 ns         45.7 ns       552115 items_per_second=39.0872M/s
-Deque/RemoveMiddle/500/manual_time                               44.0 ns         64.1 ns       313800 items_per_second=22.7374M/s
-Deque/RemoveMiddle/1000/manual_time                              59.3 ns         79.3 ns       230699 items_per_second=16.8764M/s
-Deque/RemoveMiddle/10000/manual_time                              366 ns          388 ns        32278 items_per_second=2.73452M/s
-Deque/RemoveMiddle/100000/manual_time                            8893 ns         8917 ns         1581 items_per_second=112.452k/s
-VecDeque/RemoveMiddle/10/manual_time                             12.8 ns         32.3 ns      1089249 items_per_second=78.3675M/s
-VecDeque/RemoveMiddle/50/manual_time                             18.5 ns         38.5 ns       757435 items_per_second=54.1531M/s
-VecDeque/RemoveMiddle/100/manual_time                            24.2 ns         44.4 ns       578853 items_per_second=41.2846M/s
-VecDeque/RemoveMiddle/500/manual_time                            51.7 ns         72.3 ns       270167 items_per_second=19.3448M/s
-VecDeque/RemoveMiddle/1000/manual_time                           83.4 ns          104 ns       170269 items_per_second=11.9924M/s
-VecDeque/RemoveMiddle/10000/manual_time                           749 ns          774 ns        16919 items_per_second=1.33487M/s
-VecDeque/RemoveMiddle/100000/manual_time                        19824 ns        19853 ns          707 items_per_second=50.444k/s
-BlockOrderBook/RemoveMiddle/10/manual_time                       18.9 ns         43.2 ns       681154 items_per_second=52.9518M/s
-BlockOrderBook/RemoveMiddle/50/manual_time                       28.0 ns         64.5 ns       497767 items_per_second=35.6674M/s
-BlockOrderBook/RemoveMiddle/100/manual_time                      28.3 ns         64.7 ns       490529 items_per_second=35.2985M/s
-BlockOrderBook/RemoveMiddle/500/manual_time                      29.1 ns         62.1 ns       479459 items_per_second=34.3846M/s
-BlockOrderBook/RemoveMiddle/1000/manual_time                     32.9 ns         67.7 ns       432742 items_per_second=30.369M/s
-BlockOrderBook/RemoveMiddle/10000/manual_time                    84.6 ns          175 ns       196130 items_per_second=11.818M/s
-BlockOrderBook/RemoveMiddle/100000/manual_time                   61.9 ns          525 ns       287949 items_per_second=16.1642M/s
+Vector/StdLowerBound/10/manual_time                             12789 ns        12807 ns         1095 items_per_second=320.264M/s
+Vector/StdLowerBound/50/manual_time                             23819 ns        23839 ns          591 items_per_second=171.96M/s
+Vector/StdLowerBound/100/manual_time                            31034 ns        31055 ns          454 items_per_second=131.985M/s
+Vector/StdLowerBound/500/manual_time                            38235 ns        38253 ns          367 items_per_second=107.126M/s
+Vector/StdLowerBound/1000/manual_time                           44810 ns        44829 ns          310 items_per_second=91.4082M/s
+Vector/StdLowerBound/10000/manual_time                         103703 ns       103726 ns          135 items_per_second=39.4974M/s
+Vector/StdLowerBound/100000/manual_time                        153786 ns       153824 ns           91 items_per_second=26.6345M/s
+Deque/StdLowerBound/10/manual_time                              18339 ns        18358 ns          793 items_per_second=223.346M/s
+Deque/StdLowerBound/50/manual_time                              30606 ns        30624 ns          457 items_per_second=133.829M/s
+Deque/StdLowerBound/100/manual_time                             33785 ns        33802 ns          409 items_per_second=121.236M/s
+Deque/StdLowerBound/500/manual_time                             60216 ns        60237 ns          232 items_per_second=68.0213M/s
+Deque/StdLowerBound/1000/manual_time                            57840 ns        57863 ns          241 items_per_second=70.816M/s
+Deque/StdLowerBound/10000/manual_time                          110517 ns       110537 ns           95 items_per_second=37.0623M/s
+Deque/StdLowerBound/100000/manual_time                         312532 ns       312571 ns           42 items_per_second=13.1059M/s
+VecDeque/StdLowerBound/10/manual_time                           17012 ns        17034 ns          817 items_per_second=240.765M/s
+VecDeque/StdLowerBound/50/manual_time                           30684 ns        30703 ns          438 items_per_second=133.489M/s
+VecDeque/StdLowerBound/100/manual_time                          38218 ns        38238 ns          365 items_per_second=107.174M/s
+VecDeque/StdLowerBound/500/manual_time                          46084 ns        46102 ns          304 items_per_second=88.8803M/s
+VecDeque/StdLowerBound/1000/manual_time                         54740 ns        54760 ns          254 items_per_second=74.8262M/s
+VecDeque/StdLowerBound/10000/manual_time                       123946 ns       123964 ns          110 items_per_second=33.0466M/s
+VecDeque/StdLowerBound/100000/manual_time                      180642 ns       180667 ns           78 items_per_second=22.6747M/s
+BlockOrderBook/StdLowerBound/10/manual_time                     62186 ns        62206 ns          223 items_per_second=65.8671M/s
+BlockOrderBook/StdLowerBound/50/manual_time                    270155 ns       270173 ns           52 items_per_second=15.1616M/s
+BlockOrderBook/StdLowerBound/100/manual_time                   597642 ns       597750 ns           24 items_per_second=6.8536M/s
+BlockOrderBook/StdLowerBound/500/manual_time                  3005392 ns      3005600 ns            5 items_per_second=1.36288M/s
+BlockOrderBook/StdLowerBound/1000/manual_time                 5964041 ns      5964000 ns            2 items_per_second=686.783k/s
+BlockOrderBook/StdLowerBound/10000/manual_time               60194583 ns     60188000 ns            1 items_per_second=68.046k/s
+BlockOrderBook/StdLowerBound/100000/manual_time             592711583 ns    592705000 ns            1 items_per_second=6.91061k/s
+Vector/BulkCopy/Scalar/10/manual_time                            23.4 ns         55.6 ns       600549 selected_ratio=0.2
+Vector/BulkCopy/Scalar/50/manual_time                             124 ns          188 ns       113723 selected_ratio=0.38
+Vector/BulkCopy/Scalar/100/manual_time                            180 ns          231 ns        78236 selected_ratio=0.36
+Vector/BulkCopy/Scalar/500/manual_time                            411 ns          483 ns        34517 selected_ratio=0.272
+Vector/BulkCopy/Scalar/1000/manual_time                           677 ns          764 ns        20630 selected_ratio=0.293
+Vector/BulkCopy/Scalar/10000/manual_time                         5615 ns         7199 ns         2504 selected_ratio=0.2976
+Vector/BulkCopy/Scalar/100000/manual_time                       72830 ns        90568 ns          190 selected_ratio=0.29993
+Vector/BulkCopy/Contiguous/10/manual_time                        18.2 ns         45.8 ns       767659 selected_ratio=0.1
+Vector/BulkCopy/Contiguous/50/manual_time                        69.8 ns          116 ns       198970 selected_ratio=0.34
+Vector/BulkCopy/Contiguous/100/manual_time                        125 ns          187 ns       112700 selected_ratio=0.33
+Vector/BulkCopy/Contiguous/500/manual_time                        614 ns          675 ns        23013 selected_ratio=0.268
+Vector/BulkCopy/Contiguous/1000/manual_time                      1252 ns         1324 ns        11159 selected_ratio=0.29
+Vector/BulkCopy/Contiguous/10000/manual_time                     9945 ns        11376 ns         1414 selected_ratio=0.2988
+Vector/BulkCopy/Contiguous/100000/manual_time                   53140 ns        70396 ns          260 selected_ratio=0.29996
+Deque/BulkCopy/Scalar/10/manual_time                             25.5 ns         58.5 ns       556334 selected_ratio=0.2
+Deque/BulkCopy/Scalar/50/manual_time                              132 ns          196 ns       106579 selected_ratio=0.38
+Deque/BulkCopy/Scalar/100/manual_time                             194 ns          246 ns        72360 selected_ratio=0.34
+Deque/BulkCopy/Scalar/500/manual_time                             447 ns          525 ns        31378 selected_ratio=0.256
+Deque/BulkCopy/Scalar/1000/manual_time                            766 ns          860 ns        18055 selected_ratio=0.294
+Deque/BulkCopy/Scalar/10000/manual_time                          5952 ns         6782 ns         2195 selected_ratio=0.2969
+Deque/BulkCopy/Scalar/100000/manual_time                        78048 ns        87863 ns          182 selected_ratio=0.29993
+Deque/BulkCopy/Contiguous/10/manual_time                         18.9 ns         51.0 ns       699515 selected_ratio=0.1
+Deque/BulkCopy/Contiguous/50/manual_time                         34.3 ns         89.9 ns       423047 selected_ratio=0.34
+Deque/BulkCopy/Contiguous/100/manual_time                        58.3 ns          127 ns       237506 selected_ratio=0.35
+Deque/BulkCopy/Contiguous/500/manual_time                         182 ns          256 ns        77479 selected_ratio=0.264
+Deque/BulkCopy/Contiguous/1000/manual_time                        364 ns          451 ns        37860 selected_ratio=0.298
+Deque/BulkCopy/Contiguous/10000/manual_time                      4352 ns         5060 ns         3336 selected_ratio=0.2978
+Deque/BulkCopy/Contiguous/100000/manual_time                    41193 ns        50257 ns          342 selected_ratio=0.29994
+VecDeque/BulkCopy/Scalar/10/manual_time                          24.4 ns         59.5 ns       576325 selected_ratio=0.2
+VecDeque/BulkCopy/Scalar/50/manual_time                           130 ns          201 ns       106423 selected_ratio=0.34
+VecDeque/BulkCopy/Scalar/100/manual_time                          190 ns          251 ns        73412 selected_ratio=0.37
+VecDeque/BulkCopy/Scalar/500/manual_time                          470 ns          569 ns        30108 selected_ratio=0.282
+VecDeque/BulkCopy/Scalar/1000/manual_time                         824 ns          964 ns        16969 selected_ratio=0.295
+VecDeque/BulkCopy/Scalar/10000/manual_time                       6384 ns         7892 ns         2194 selected_ratio=0.2968
+VecDeque/BulkCopy/Scalar/100000/manual_time                     83613 ns       102103 ns          175 selected_ratio=0.29991
+VecDeque/BulkCopy/Contiguous/10/manual_time                      20.8 ns         50.9 ns       664424 selected_ratio=0.1
+VecDeque/BulkCopy/Contiguous/50/manual_time                       112 ns          167 ns       124107 selected_ratio=0.34
+VecDeque/BulkCopy/Contiguous/100/manual_time                      205 ns          276 ns        68457 selected_ratio=0.35
+VecDeque/BulkCopy/Contiguous/500/manual_time                      630 ns          715 ns        21656 selected_ratio=0.266
+VecDeque/BulkCopy/Contiguous/1000/manual_time                    1290 ns         1408 ns        11882 selected_ratio=0.287
+VecDeque/BulkCopy/Contiguous/10000/manual_time                  10565 ns        12049 ns         1000 selected_ratio=0.3018
+VecDeque/BulkCopy/Contiguous/100000/manual_time                 56095 ns        73515 ns          239 selected_ratio=0.29994
+BlockOrderBook/BulkCopy/Scalar/10/manual_time                    71.0 ns          140 ns       198632 selected_ratio=0.2
+BlockOrderBook/BulkCopy/Scalar/50/manual_time                     231 ns          307 ns        58375 selected_ratio=0.34
+BlockOrderBook/BulkCopy/Scalar/100/manual_time                    342 ns          424 ns        41203 selected_ratio=0.31
+BlockOrderBook/BulkCopy/Scalar/500/manual_time                   1183 ns         1261 ns        10000 selected_ratio=0.288
+BlockOrderBook/BulkCopy/Scalar/1000/manual_time                  2069 ns         2153 ns         9185 selected_ratio=0.284
+BlockOrderBook/BulkCopy/Scalar/10000/manual_time                10030 ns        10142 ns         1000 selected_ratio=0.302
+BlockOrderBook/BulkCopy/Scalar/100000/manual_time              102848 ns       103265 ns          147 selected_ratio=0.29993
+BlockOrderBook/BulkCopy/Contiguous/10/manual_time                59.3 ns          130 ns       235471 selected_ratio=0.5
+BlockOrderBook/BulkCopy/Contiguous/50/manual_time                 118 ns          180 ns       121699 selected_ratio=1.38
+BlockOrderBook/BulkCopy/Contiguous/100/manual_time                173 ns          241 ns        84641 selected_ratio=1.21
+BlockOrderBook/BulkCopy/Contiguous/500/manual_time                400 ns          470 ns        35505 selected_ratio=0.87
+BlockOrderBook/BulkCopy/Contiguous/1000/manual_time               746 ns          828 ns        18970 selected_ratio=0.869
+BlockOrderBook/BulkCopy/Contiguous/10000/manual_time             3631 ns         3739 ns         4636 selected_ratio=0.4461
+BlockOrderBook/BulkCopy/Contiguous/100000/manual_time           31105 ns        31470 ns          462 selected_ratio=0.30156
+Vector/BulkCopy/FixedSlice/10/10/manual_time                     17.7 ns         44.0 ns       795306 selected_ratio=1
+Vector/BulkCopy/FixedSlice/10/50/manual_time                     17.8 ns         43.6 ns       787030 selected_ratio=0.2
+Vector/BulkCopy/FixedSlice/10/100/manual_time                    18.1 ns         43.4 ns       760211 selected_ratio=0.1
+Vector/BulkCopy/FixedSlice/10/500/manual_time                    51.8 ns         76.4 ns       266719 selected_ratio=0.02
+Vector/BulkCopy/FixedSlice/10/1000/manual_time                    104 ns          129 ns       132824 selected_ratio=0.01
+Vector/BulkCopy/FixedSlice/10/10000/manual_time                   741 ns          766 ns        18755 selected_ratio=1m
+Vector/BulkCopy/FixedSlice/10/100000/manual_time                 7542 ns         7569 ns         1864 selected_ratio=100u
+Vector/BulkCopy/FixedSlice/50/50/manual_time                     29.4 ns         54.9 ns       480075 selected_ratio=1
+Vector/BulkCopy/FixedSlice/50/100/manual_time                    42.4 ns         67.3 ns       332547 selected_ratio=0.5
+Vector/BulkCopy/FixedSlice/50/500/manual_time                    82.4 ns          107 ns       171958 selected_ratio=0.1
+Vector/BulkCopy/FixedSlice/50/1000/manual_time                    132 ns          156 ns       106394 selected_ratio=0.05
+Vector/BulkCopy/FixedSlice/50/10000/manual_time                   770 ns          795 ns        18175 selected_ratio=5m
+Vector/BulkCopy/FixedSlice/50/100000/manual_time                 7483 ns         7509 ns         1867 selected_ratio=500u
+Vector/BulkCopy/FixedSlice/100/100/manual_time                   64.1 ns         88.8 ns       220923 selected_ratio=1
+Vector/BulkCopy/FixedSlice/100/500/manual_time                    109 ns          134 ns       128524 selected_ratio=0.2
+Vector/BulkCopy/FixedSlice/100/1000/manual_time                   166 ns          190 ns        84820 selected_ratio=0.1
+Vector/BulkCopy/FixedSlice/100/10000/manual_time                  790 ns          817 ns        17635 selected_ratio=0.01
+Vector/BulkCopy/FixedSlice/100/100000/manual_time                7411 ns         7441 ns         1896 selected_ratio=1m
+Vector/BulkCopy/FixedSlice/500/500/manual_time                    304 ns          329 ns        46236 selected_ratio=1
+Vector/BulkCopy/FixedSlice/500/1000/manual_time                   391 ns          415 ns        35798 selected_ratio=0.5
+Vector/BulkCopy/FixedSlice/500/10000/manual_time                 1055 ns         1082 ns        13352 selected_ratio=0.05
+Vector/BulkCopy/FixedSlice/500/100000/manual_time                7751 ns         7789 ns         1813 selected_ratio=5m
+Vector/BulkCopy/FixedSlice/1000/1000/manual_time                  582 ns          607 ns        23952 selected_ratio=1
+Vector/BulkCopy/FixedSlice/1000/10000/manual_time                1750 ns         1797 ns         9364 selected_ratio=0.1
+Vector/BulkCopy/FixedSlice/1000/100000/manual_time               8002 ns         8033 ns         1768 selected_ratio=0.01
+Deque/BulkCopy/FixedSlice/10/10/manual_time                      19.0 ns         45.6 ns       736734 selected_ratio=1
+Deque/BulkCopy/FixedSlice/10/50/manual_time                      20.6 ns         46.0 ns       693498 selected_ratio=0.2
+Deque/BulkCopy/FixedSlice/10/100/manual_time                     24.4 ns         49.3 ns       576707 selected_ratio=0.1
+Deque/BulkCopy/FixedSlice/10/500/manual_time                     69.2 ns         93.5 ns       195266 selected_ratio=0.02
+Deque/BulkCopy/FixedSlice/10/1000/manual_time                     134 ns          158 ns       104698 selected_ratio=0.01
+Deque/BulkCopy/FixedSlice/10/10000/manual_time                   1104 ns         1128 ns        12457 selected_ratio=1m
+Deque/BulkCopy/FixedSlice/10/100000/manual_time                 11038 ns        11063 ns         1262 selected_ratio=100u
+Deque/BulkCopy/FixedSlice/50/50/manual_time                      46.2 ns         70.5 ns       317138 selected_ratio=1
+Deque/BulkCopy/FixedSlice/50/100/manual_time                     61.2 ns         85.8 ns       229577 selected_ratio=0.5
+Deque/BulkCopy/FixedSlice/50/500/manual_time                      104 ns          128 ns       136893 selected_ratio=0.1
+Deque/BulkCopy/FixedSlice/50/1000/manual_time                     169 ns          193 ns        82162 selected_ratio=0.05
+Deque/BulkCopy/FixedSlice/50/10000/manual_time                   1140 ns         1163 ns        11773 selected_ratio=5m
+Deque/BulkCopy/FixedSlice/50/100000/manual_time                 10993 ns        11016 ns         1281 selected_ratio=500u
+Deque/BulkCopy/FixedSlice/100/100/manual_time                    98.1 ns          123 ns       142826 selected_ratio=1
+Deque/BulkCopy/FixedSlice/100/500/manual_time                     154 ns          178 ns        90702 selected_ratio=0.2
+Deque/BulkCopy/FixedSlice/100/1000/manual_time                    217 ns          241 ns        64556 selected_ratio=0.1
+Deque/BulkCopy/FixedSlice/100/10000/manual_time                  1190 ns         1214 ns        11215 selected_ratio=0.01
+Deque/BulkCopy/FixedSlice/100/100000/manual_time                11167 ns        11192 ns         1252 selected_ratio=1m
+Deque/BulkCopy/FixedSlice/500/500/manual_time                     439 ns          464 ns        31820 selected_ratio=1
+Deque/BulkCopy/FixedSlice/500/1000/manual_time                    559 ns          583 ns        25071 selected_ratio=0.5
+Deque/BulkCopy/FixedSlice/500/10000/manual_time                  1546 ns         1570 ns         8978 selected_ratio=0.05
+Deque/BulkCopy/FixedSlice/500/100000/manual_time                11677 ns        11710 ns         1190 selected_ratio=5m
+Deque/BulkCopy/FixedSlice/1000/1000/manual_time                   871 ns          896 ns        16158 selected_ratio=1
+Deque/BulkCopy/FixedSlice/1000/10000/manual_time                 2271 ns         2296 ns         5799 selected_ratio=0.1
+Deque/BulkCopy/FixedSlice/1000/100000/manual_time               12271 ns        12304 ns         1157 selected_ratio=0.01
+VecDeque/BulkCopy/FixedSlice/10/10/manual_time                   20.2 ns         45.7 ns       698646 selected_ratio=1
+VecDeque/BulkCopy/FixedSlice/10/50/manual_time                   23.9 ns         48.9 ns       609970 selected_ratio=0.2
+VecDeque/BulkCopy/FixedSlice/10/100/manual_time                  27.6 ns         52.9 ns       509956 selected_ratio=0.1
+VecDeque/BulkCopy/FixedSlice/10/500/manual_time                  70.9 ns         96.7 ns       196571 selected_ratio=0.02
+VecDeque/BulkCopy/FixedSlice/10/1000/manual_time                  131 ns          157 ns       106723 selected_ratio=0.01
+VecDeque/BulkCopy/FixedSlice/10/10000/manual_time                1054 ns         1079 ns        13258 selected_ratio=1m
+VecDeque/BulkCopy/FixedSlice/10/100000/manual_time              10654 ns        10681 ns         1306 selected_ratio=100u
+VecDeque/BulkCopy/FixedSlice/50/50/manual_time                   54.9 ns         80.1 ns       253326 selected_ratio=1
+VecDeque/BulkCopy/FixedSlice/50/100/manual_time                  62.6 ns         88.1 ns       223670 selected_ratio=0.5
+VecDeque/BulkCopy/FixedSlice/50/500/manual_time                   107 ns          133 ns       134892 selected_ratio=0.1
+VecDeque/BulkCopy/FixedSlice/50/1000/manual_time                  162 ns          186 ns        84578 selected_ratio=0.05
+VecDeque/BulkCopy/FixedSlice/50/10000/manual_time                1071 ns         1096 ns        13370 selected_ratio=5m
+VecDeque/BulkCopy/FixedSlice/50/100000/manual_time              10486 ns        10512 ns         1339 selected_ratio=500u
+VecDeque/BulkCopy/FixedSlice/100/100/manual_time                 91.8 ns          117 ns       151967 selected_ratio=1
+VecDeque/BulkCopy/FixedSlice/100/500/manual_time                  148 ns          174 ns        93162 selected_ratio=0.2
+VecDeque/BulkCopy/FixedSlice/100/1000/manual_time                 199 ns          225 ns        68742 selected_ratio=0.1
+VecDeque/BulkCopy/FixedSlice/100/10000/manual_time               1100 ns         1126 ns        12341 selected_ratio=0.01
+VecDeque/BulkCopy/FixedSlice/100/100000/manual_time             10571 ns        10598 ns         1334 selected_ratio=1m
+VecDeque/BulkCopy/FixedSlice/500/500/manual_time                  448 ns          474 ns        31151 selected_ratio=1
+VecDeque/BulkCopy/FixedSlice/500/1000/manual_time                 549 ns          574 ns        25222 selected_ratio=0.5
+VecDeque/BulkCopy/FixedSlice/500/10000/manual_time               1471 ns         1504 ns         9168 selected_ratio=0.05
+VecDeque/BulkCopy/FixedSlice/500/100000/manual_time             10972 ns        11006 ns         1260 selected_ratio=5m
+VecDeque/BulkCopy/FixedSlice/1000/1000/manual_time                854 ns          880 ns        16331 selected_ratio=1
+VecDeque/BulkCopy/FixedSlice/1000/10000/manual_time              1992 ns         2027 ns         6917 selected_ratio=0.1
+VecDeque/BulkCopy/FixedSlice/1000/100000/manual_time            11520 ns        11552 ns         1202 selected_ratio=0.01
+BlockOrderBook/BulkCopy/FixedSlice/10/10/manual_time             21.4 ns         47.4 ns       654096 selected_ratio=1
+BlockOrderBook/BulkCopy/FixedSlice/10/50/manual_time             32.3 ns         58.1 ns       433945 selected_ratio=0.2
+BlockOrderBook/BulkCopy/FixedSlice/10/100/manual_time            28.5 ns         55.3 ns       500000 selected_ratio=0.1
+BlockOrderBook/BulkCopy/FixedSlice/10/500/manual_time            51.9 ns         77.9 ns       266261 selected_ratio=0.02
+BlockOrderBook/BulkCopy/FixedSlice/10/1000/manual_time           23.3 ns         49.2 ns       597172 selected_ratio=0.01
+BlockOrderBook/BulkCopy/FixedSlice/10/10000/manual_time          38.1 ns         64.4 ns       367870 selected_ratio=1m
+BlockOrderBook/BulkCopy/FixedSlice/10/100000/manual_time         65.1 ns         90.8 ns       218610 selected_ratio=100u
+BlockOrderBook/BulkCopy/FixedSlice/50/50/manual_time             54.2 ns         79.9 ns       260807 selected_ratio=1
+BlockOrderBook/BulkCopy/FixedSlice/50/100/manual_time            81.7 ns          107 ns       169918 selected_ratio=0.5
+BlockOrderBook/BulkCopy/FixedSlice/50/500/manual_time            77.7 ns          103 ns       182521 selected_ratio=0.1
+BlockOrderBook/BulkCopy/FixedSlice/50/1000/manual_time           75.3 ns          100 ns       186017 selected_ratio=0.05
+BlockOrderBook/BulkCopy/FixedSlice/50/10000/manual_time          85.2 ns          110 ns       164650 selected_ratio=5m
+BlockOrderBook/BulkCopy/FixedSlice/50/100000/manual_time         86.1 ns          111 ns       163249 selected_ratio=500u
+BlockOrderBook/BulkCopy/FixedSlice/100/100/manual_time           89.1 ns          115 ns       157157 selected_ratio=1
+BlockOrderBook/BulkCopy/FixedSlice/100/500/manual_time            110 ns          135 ns       126852 selected_ratio=0.2
+BlockOrderBook/BulkCopy/FixedSlice/100/1000/manual_time           108 ns          133 ns       126699 selected_ratio=0.1
+BlockOrderBook/BulkCopy/FixedSlice/100/10000/manual_time          119 ns          144 ns       118354 selected_ratio=0.01
+BlockOrderBook/BulkCopy/FixedSlice/100/100000/manual_time         123 ns          148 ns       120354 selected_ratio=1m
+BlockOrderBook/BulkCopy/FixedSlice/500/500/manual_time            461 ns          486 ns        31551 selected_ratio=1
+BlockOrderBook/BulkCopy/FixedSlice/500/1000/manual_time           476 ns          501 ns        29365 selected_ratio=0.5
+BlockOrderBook/BulkCopy/FixedSlice/500/10000/manual_time          449 ns          474 ns        31180 selected_ratio=0.05
+BlockOrderBook/BulkCopy/FixedSlice/500/100000/manual_time         482 ns          506 ns        31236 selected_ratio=5m
+BlockOrderBook/BulkCopy/FixedSlice/1000/1000/manual_time          788 ns          814 ns        17669 selected_ratio=1
+BlockOrderBook/BulkCopy/FixedSlice/1000/10000/manual_time         846 ns          872 ns        16662 selected_ratio=0.1
+BlockOrderBook/BulkCopy/FixedSlice/1000/100000/manual_time        853 ns          879 ns        16517 selected_ratio=0.01
+Vector/RemoveMiddle/10/manual_time                               12.8 ns         32.3 ns      1096752 items_per_second=78.1711M/s
+Vector/RemoveMiddle/50/manual_time                               16.4 ns         36.7 ns       848008 items_per_second=61.0095M/s
+Vector/RemoveMiddle/100/manual_time                              19.4 ns         39.9 ns       740770 items_per_second=51.5825M/s
+Vector/RemoveMiddle/500/manual_time                              31.7 ns         51.9 ns       435587 items_per_second=31.51M/s
+Vector/RemoveMiddle/1000/manual_time                             44.2 ns         64.5 ns       315648 items_per_second=22.6253M/s
+Vector/RemoveMiddle/10000/manual_time                            1127 ns         1149 ns         8997 items_per_second=887.61k/s
+Vector/RemoveMiddle/100000/manual_time                          17302 ns        17358 ns          811 items_per_second=57.7956k/s
+Deque/RemoveMiddle/10/manual_time                                15.1 ns         35.0 ns       912635 items_per_second=66.0323M/s
+Deque/RemoveMiddle/50/manual_time                                20.7 ns         41.1 ns       680005 items_per_second=48.2826M/s
+Deque/RemoveMiddle/100/manual_time                               25.6 ns         45.9 ns       547020 items_per_second=39.0802M/s
+Deque/RemoveMiddle/500/manual_time                               43.9 ns         64.2 ns       318561 items_per_second=22.7878M/s
+Deque/RemoveMiddle/1000/manual_time                              59.4 ns         79.5 ns       231266 items_per_second=16.8388M/s
+Deque/RemoveMiddle/10000/manual_time                              366 ns          388 ns        32027 items_per_second=2.73113M/s
+Deque/RemoveMiddle/100000/manual_time                            8962 ns         8990 ns         1562 items_per_second=111.581k/s
+VecDeque/RemoveMiddle/10/manual_time                             13.6 ns         34.5 ns      1087408 items_per_second=73.4905M/s
+VecDeque/RemoveMiddle/50/manual_time                             19.6 ns         40.8 ns       739361 items_per_second=51.0731M/s
+VecDeque/RemoveMiddle/100/manual_time                            24.6 ns         45.0 ns       578193 items_per_second=40.6665M/s
+VecDeque/RemoveMiddle/500/manual_time                            52.4 ns         73.5 ns       266113 items_per_second=19.0724M/s
+VecDeque/RemoveMiddle/1000/manual_time                           82.8 ns          104 ns       169127 items_per_second=12.0776M/s
+VecDeque/RemoveMiddle/10000/manual_time                           750 ns          774 ns        16809 items_per_second=1.33332M/s
+VecDeque/RemoveMiddle/100000/manual_time                        18190 ns        18225 ns          742 items_per_second=54.9754k/s
+BlockOrderBook/RemoveMiddle/10/manual_time                       18.8 ns         43.1 ns       737854 items_per_second=53.1955M/s
+BlockOrderBook/RemoveMiddle/50/manual_time                       28.4 ns         65.1 ns       492023 items_per_second=35.2105M/s
+BlockOrderBook/RemoveMiddle/100/manual_time                      28.4 ns         64.8 ns       485948 items_per_second=35.254M/s
+BlockOrderBook/RemoveMiddle/500/manual_time                      29.4 ns         62.7 ns       482097 items_per_second=34.0451M/s
+BlockOrderBook/RemoveMiddle/1000/manual_time                     33.3 ns         68.1 ns       421229 items_per_second=30.0528M/s
+BlockOrderBook/RemoveMiddle/10000/manual_time                    92.3 ns          191 ns       178786 items_per_second=10.8393M/s
+BlockOrderBook/RemoveMiddle/100000/manual_time                   57.2 ns          505 ns       269298 items_per_second=17.48M/s
+Deque/Steady/PushBackPopFront/10/manual_time                     12.4 ns         31.6 ns      1132203 items_per_second=80.9634M/s
+Deque/Steady/PushBackPopFront/50/manual_time                     12.4 ns         31.8 ns      1118907 items_per_second=80.6313M/s
+Deque/Steady/PushBackPopFront/100/manual_time                    12.4 ns         31.8 ns      1130117 items_per_second=80.811M/s
+Deque/Steady/PushBackPopFront/500/manual_time                    12.4 ns         31.8 ns      1127704 items_per_second=80.5408M/s
+Deque/Steady/PushBackPopFront/1000/manual_time                   12.4 ns         31.7 ns      1126550 items_per_second=80.7709M/s
+Deque/Steady/PushBackPopFront/10000/manual_time                  12.2 ns         31.3 ns      1151590 items_per_second=81.8529M/s
+Deque/Steady/PushBackPopFront/100000/manual_time                 12.2 ns         31.3 ns      1143363 items_per_second=81.9566M/s
+Deque/Steady/PushFrontPopBack/10/manual_time                     12.3 ns         31.3 ns      1140932 items_per_second=81.6214M/s
+Deque/Steady/PushFrontPopBack/50/manual_time                     12.3 ns         31.4 ns      1134336 items_per_second=81.5371M/s
+Deque/Steady/PushFrontPopBack/100/manual_time                    12.2 ns         31.4 ns      1147184 items_per_second=81.727M/s
+Deque/Steady/PushFrontPopBack/500/manual_time                    12.3 ns         31.4 ns      1147988 items_per_second=81.4437M/s
+Deque/Steady/PushFrontPopBack/1000/manual_time                   12.3 ns         31.2 ns      1138044 items_per_second=81.5573M/s
+Deque/Steady/PushFrontPopBack/10000/manual_time                  12.2 ns         31.3 ns      1141978 items_per_second=81.644M/s
+Deque/Steady/PushFrontPopBack/100000/manual_time                 12.3 ns         31.5 ns      1151721 items_per_second=81.4104M/s
+VecDeque/Steady/PushBackPopFront/10/manual_time                  14.2 ns         33.2 ns       970551 items_per_second=70.2029M/s
+VecDeque/Steady/PushBackPopFront/50/manual_time                  14.2 ns         33.4 ns       979974 items_per_second=70.1776M/s
+VecDeque/Steady/PushBackPopFront/100/manual_time                 14.3 ns         33.4 ns       989697 items_per_second=70.1358M/s
+VecDeque/Steady/PushBackPopFront/500/manual_time                 14.2 ns         33.3 ns       955465 items_per_second=70.3165M/s
+VecDeque/Steady/PushBackPopFront/1000/manual_time                14.2 ns         33.3 ns       979723 items_per_second=70.2024M/s
+VecDeque/Steady/PushBackPopFront/10000/manual_time               14.3 ns         33.2 ns       980187 items_per_second=70.1049M/s
+VecDeque/Steady/PushBackPopFront/100000/manual_time              14.3 ns         33.4 ns       977258 items_per_second=70.025M/s
+VecDeque/Steady/PushFrontPopBack/10/manual_time                  14.0 ns         32.9 ns       996322 items_per_second=71.2676M/s
+VecDeque/Steady/PushFrontPopBack/50/manual_time                  14.0 ns         33.2 ns       998883 items_per_second=71.1931M/s
+VecDeque/Steady/PushFrontPopBack/100/manual_time                 14.0 ns         33.0 ns       999855 items_per_second=71.4133M/s
+VecDeque/Steady/PushFrontPopBack/500/manual_time                 14.0 ns         33.1 ns       997534 items_per_second=71.1755M/s
+VecDeque/Steady/PushFrontPopBack/1000/manual_time                14.0 ns         33.1 ns       998025 items_per_second=71.3089M/s
+VecDeque/Steady/PushFrontPopBack/10000/manual_time               14.0 ns         33.2 ns       986489 items_per_second=71.2082M/s
+VecDeque/Steady/PushFrontPopBack/100000/manual_time              14.0 ns         33.1 ns       977690 items_per_second=71.2824M/s
+BlockOrderBook/Steady/PushBackPopFront/10/manual_time            31.1 ns         51.8 ns       453320 items_per_second=32.1852M/s
+BlockOrderBook/Steady/PushBackPopFront/50/manual_time            24.8 ns         45.4 ns       539877 items_per_second=40.2461M/s
+BlockOrderBook/Steady/PushBackPopFront/100/manual_time           26.0 ns         47.0 ns       537028 items_per_second=38.4624M/s
+BlockOrderBook/Steady/PushBackPopFront/500/manual_time           28.8 ns         49.8 ns       489037 items_per_second=34.7731M/s
+BlockOrderBook/Steady/PushBackPopFront/1000/manual_time          29.7 ns         50.8 ns       473553 items_per_second=33.7011M/s
+BlockOrderBook/Steady/PushBackPopFront/10000/manual_time         48.5 ns         69.5 ns       285017 items_per_second=20.6019M/s
+BlockOrderBook/Steady/PushBackPopFront/100000/manual_time         499 ns          519 ns        27743 items_per_second=2.00485M/s
+BlockOrderBook/Steady/PushFrontPopBack/10/manual_time            31.6 ns         52.3 ns       449294 items_per_second=31.6816M/s
+BlockOrderBook/Steady/PushFrontPopBack/50/manual_time            25.9 ns         46.9 ns       543091 items_per_second=38.6355M/s
+BlockOrderBook/Steady/PushFrontPopBack/100/manual_time           26.3 ns         47.3 ns       532789 items_per_second=38.0487M/s
+BlockOrderBook/Steady/PushFrontPopBack/500/manual_time           28.8 ns         50.0 ns       490634 items_per_second=34.766M/s
+BlockOrderBook/Steady/PushFrontPopBack/1000/manual_time          29.9 ns         50.9 ns       475372 items_per_second=33.4754M/s
+BlockOrderBook/Steady/PushFrontPopBack/10000/manual_time         49.3 ns         70.4 ns       284514 items_per_second=20.2891M/s
+BlockOrderBook/Steady/PushFrontPopBack/100000/manual_time         507 ns          527 ns        27629 items_per_second=1.97333M/s
 Container        Algorithm                         ns/iter     ns/query         items/s
-BlockOrderBook   BulkCopy/Contiguous/10              60.31          n/a             n/a
-Deque            BulkCopy/Contiguous/10              18.87          n/a             n/a
-VecDeque         BulkCopy/Contiguous/10              21.04          n/a             n/a
-Vector           BulkCopy/Contiguous/10              18.37          n/a             n/a
-BlockOrderBook   BulkCopy/Contiguous/100            174.31          n/a             n/a
-Deque            BulkCopy/Contiguous/100             54.96          n/a             n/a
-VecDeque         BulkCopy/Contiguous/100            204.26          n/a             n/a
-Vector           BulkCopy/Contiguous/100            125.98          n/a             n/a
-BlockOrderBook   BulkCopy/Contiguous/1000           752.07          n/a             n/a
-Deque            BulkCopy/Contiguous/1000           365.85          n/a             n/a
-VecDeque         BulkCopy/Contiguous/1000          1198.61          n/a             n/a
-Vector           BulkCopy/Contiguous/1000          1246.20          n/a             n/a
-BlockOrderBook   BulkCopy/Contiguous/10000         3613.84          n/a             n/a
-Deque            BulkCopy/Contiguous/10000         4407.41          n/a             n/a
-VecDeque         BulkCopy/Contiguous/10000        10647.52          n/a             n/a
-Vector           BulkCopy/Contiguous/10000         9932.96          n/a             n/a
-BlockOrderBook   BulkCopy/Contiguous/100000       30151.28          n/a             n/a
-Deque            BulkCopy/Contiguous/100000       39938.77          n/a             n/a
-VecDeque         BulkCopy/Contiguous/100000       57870.56          n/a             n/a
-Vector           BulkCopy/Contiguous/100000       49239.46          n/a             n/a
-BlockOrderBook   BulkCopy/Contiguous/50             116.03          n/a             n/a
-Deque            BulkCopy/Contiguous/50              35.11          n/a             n/a
-VecDeque         BulkCopy/Contiguous/50             114.50          n/a             n/a
-Vector           BulkCopy/Contiguous/50              71.82          n/a             n/a
-BlockOrderBook   BulkCopy/Contiguous/500            399.49          n/a             n/a
-Deque            BulkCopy/Contiguous/500            189.18          n/a             n/a
-VecDeque         BulkCopy/Contiguous/500            596.55          n/a             n/a
-Vector           BulkCopy/Contiguous/500            608.90          n/a             n/a
-BlockOrderBook   BulkCopy/FixedSlice/10/10           21.26          n/a             n/a
-Deque            BulkCopy/FixedSlice/10/10           19.24          n/a             n/a
-VecDeque         BulkCopy/FixedSlice/10/10           20.27          n/a             n/a
-Vector           BulkCopy/FixedSlice/10/10           17.38          n/a             n/a
-BlockOrderBook   BulkCopy/FixedSlice/10/100          27.49          n/a             n/a
-Deque            BulkCopy/FixedSlice/10/100          25.47          n/a             n/a
-VecDeque         BulkCopy/FixedSlice/10/100          27.61          n/a             n/a
-Vector           BulkCopy/FixedSlice/10/100          17.77          n/a             n/a
-BlockOrderBook   BulkCopy/FixedSlice/10/1000         22.98          n/a             n/a
-Deque            BulkCopy/FixedSlice/10/1000        134.96          n/a             n/a
-VecDeque         BulkCopy/FixedSlice/10/1000        131.99          n/a             n/a
-Vector           BulkCopy/FixedSlice/10/1000        105.38          n/a             n/a
-BlockOrderBook   BulkCopy/FixedSlice/10/10000        38.34          n/a             n/a
-Deque            BulkCopy/FixedSlice/10/10000      1114.76          n/a             n/a
-VecDeque         BulkCopy/FixedSlice/10/10000      1068.62          n/a             n/a
-Vector           BulkCopy/FixedSlice/10/10000       743.01          n/a             n/a
-BlockOrderBook   BulkCopy/FixedSlice/10/100000        66.83          n/a             n/a
-Deque            BulkCopy/FixedSlice/10/100000     11105.20          n/a             n/a
-VecDeque         BulkCopy/FixedSlice/10/100000     10732.72          n/a             n/a
-Vector           BulkCopy/FixedSlice/10/100000      7583.60          n/a             n/a
-BlockOrderBook   BulkCopy/FixedSlice/10/50           32.53          n/a             n/a
-Deque            BulkCopy/FixedSlice/10/50           20.50          n/a             n/a
-VecDeque         BulkCopy/FixedSlice/10/50           24.17          n/a             n/a
-Vector           BulkCopy/FixedSlice/10/50           17.50          n/a             n/a
-BlockOrderBook   BulkCopy/FixedSlice/10/500          50.47          n/a             n/a
-Deque            BulkCopy/FixedSlice/10/500          67.40          n/a             n/a
-VecDeque         BulkCopy/FixedSlice/10/500          74.48          n/a             n/a
-Vector           BulkCopy/FixedSlice/10/500          50.54          n/a             n/a
-BlockOrderBook   BulkCopy/FixedSlice/100/100        108.57          n/a             n/a
-Deque            BulkCopy/FixedSlice/100/100         97.65          n/a             n/a
-VecDeque         BulkCopy/FixedSlice/100/100         92.60          n/a             n/a
-Vector           BulkCopy/FixedSlice/100/100         63.77          n/a             n/a
-BlockOrderBook   BulkCopy/FixedSlice/100/1000       117.75          n/a             n/a
-Deque            BulkCopy/FixedSlice/100/1000       218.38          n/a             n/a
-VecDeque         BulkCopy/FixedSlice/100/1000       207.16          n/a             n/a
-Vector           BulkCopy/FixedSlice/100/1000       166.23          n/a             n/a
-BlockOrderBook   BulkCopy/FixedSlice/100/10000       127.86          n/a             n/a
-Deque            BulkCopy/FixedSlice/100/10000      1190.04          n/a             n/a
-VecDeque         BulkCopy/FixedSlice/100/10000      1145.84          n/a             n/a
-Vector           BulkCopy/FixedSlice/100/10000       816.50          n/a             n/a
-BlockOrderBook   BulkCopy/FixedSlice/100/100000       121.82          n/a             n/a
-Deque            BulkCopy/FixedSlice/100/100000     11099.52          n/a             n/a
-VecDeque         BulkCopy/FixedSlice/100/100000     10649.71          n/a             n/a
-Vector           BulkCopy/FixedSlice/100/100000      7467.46          n/a             n/a
-BlockOrderBook   BulkCopy/FixedSlice/100/500        119.85          n/a             n/a
-Deque            BulkCopy/FixedSlice/100/500        153.49          n/a             n/a
-VecDeque         BulkCopy/FixedSlice/100/500        152.29          n/a             n/a
-Vector           BulkCopy/FixedSlice/100/500        114.65          n/a             n/a
-BlockOrderBook   BulkCopy/FixedSlice/1000/1000       806.86          n/a             n/a
-Deque            BulkCopy/FixedSlice/1000/1000       864.83          n/a             n/a
-VecDeque         BulkCopy/FixedSlice/1000/1000       855.21          n/a             n/a
-Vector           BulkCopy/FixedSlice/1000/1000       571.17          n/a             n/a
-BlockOrderBook   BulkCopy/FixedSlice/1000/10000       921.89          n/a             n/a
-Deque            BulkCopy/FixedSlice/1000/10000      2175.47          n/a             n/a
-VecDeque         BulkCopy/FixedSlice/1000/10000      2077.49          n/a             n/a
-Vector           BulkCopy/FixedSlice/1000/10000      1799.81          n/a             n/a
-BlockOrderBook   BulkCopy/FixedSlice/1000/100000       845.67          n/a             n/a
-Deque            BulkCopy/FixedSlice/1000/100000     12250.47          n/a             n/a
-VecDeque         BulkCopy/FixedSlice/1000/100000     11484.85          n/a             n/a
-Vector           BulkCopy/FixedSlice/1000/100000      8073.70          n/a             n/a
-BlockOrderBook   BulkCopy/FixedSlice/50/100          81.14          n/a             n/a
-Deque            BulkCopy/FixedSlice/50/100          60.20          n/a             n/a
-VecDeque         BulkCopy/FixedSlice/50/100          61.89          n/a             n/a
-Vector           BulkCopy/FixedSlice/50/100          43.14          n/a             n/a
-BlockOrderBook   BulkCopy/FixedSlice/50/1000         78.58          n/a             n/a
-Deque            BulkCopy/FixedSlice/50/1000        171.24          n/a             n/a
-VecDeque         BulkCopy/FixedSlice/50/1000        166.17          n/a             n/a
-Vector           BulkCopy/FixedSlice/50/1000        135.31          n/a             n/a
-BlockOrderBook   BulkCopy/FixedSlice/50/10000        89.05          n/a             n/a
-Deque            BulkCopy/FixedSlice/50/10000      1143.39          n/a             n/a
-VecDeque         BulkCopy/FixedSlice/50/10000      1098.60          n/a             n/a
-Vector           BulkCopy/FixedSlice/50/10000       783.80          n/a             n/a
-BlockOrderBook   BulkCopy/FixedSlice/50/100000        92.06          n/a             n/a
-Deque            BulkCopy/FixedSlice/50/100000     10999.78          n/a             n/a
-VecDeque         BulkCopy/FixedSlice/50/100000     10633.45          n/a             n/a
-Vector           BulkCopy/FixedSlice/50/100000      7480.90          n/a             n/a
-BlockOrderBook   BulkCopy/FixedSlice/50/50           52.87          n/a             n/a
-Deque            BulkCopy/FixedSlice/50/50           46.87          n/a             n/a
-VecDeque         BulkCopy/FixedSlice/50/50           54.25          n/a             n/a
-Vector           BulkCopy/FixedSlice/50/50           29.16          n/a             n/a
-BlockOrderBook   BulkCopy/FixedSlice/50/500          81.38          n/a             n/a
-Deque            BulkCopy/FixedSlice/50/500         102.68          n/a             n/a
-VecDeque         BulkCopy/FixedSlice/50/500         107.59          n/a             n/a
-Vector           BulkCopy/FixedSlice/50/500          80.76          n/a             n/a
-BlockOrderBook   BulkCopy/FixedSlice/500/1000       422.11          n/a             n/a
-Deque            BulkCopy/FixedSlice/500/1000       538.96          n/a             n/a
-VecDeque         BulkCopy/FixedSlice/500/1000       551.19          n/a             n/a
-Vector           BulkCopy/FixedSlice/500/1000       408.46          n/a             n/a
-BlockOrderBook   BulkCopy/FixedSlice/500/10000       441.97          n/a             n/a
-Deque            BulkCopy/FixedSlice/500/10000      1584.56          n/a             n/a
-VecDeque         BulkCopy/FixedSlice/500/10000      1490.92          n/a             n/a
-Vector           BulkCopy/FixedSlice/500/10000      1070.35          n/a             n/a
-BlockOrderBook   BulkCopy/FixedSlice/500/100000       480.40          n/a             n/a
-Deque            BulkCopy/FixedSlice/500/100000     11582.05          n/a             n/a
-VecDeque         BulkCopy/FixedSlice/500/100000     10960.61          n/a             n/a
-Vector           BulkCopy/FixedSlice/500/100000      7516.95          n/a             n/a
-BlockOrderBook   BulkCopy/FixedSlice/500/500        458.51          n/a             n/a
-Deque            BulkCopy/FixedSlice/500/500        458.40          n/a             n/a
-VecDeque         BulkCopy/FixedSlice/500/500        431.14          n/a             n/a
-Vector           BulkCopy/FixedSlice/500/500        308.41          n/a             n/a
-BlockOrderBook   BulkCopy/Scalar/10                  69.52          n/a             n/a
-Deque            BulkCopy/Scalar/10                  25.67          n/a             n/a
-VecDeque         BulkCopy/Scalar/10                  23.80          n/a             n/a
-Vector           BulkCopy/Scalar/10                  23.65          n/a             n/a
-BlockOrderBook   BulkCopy/Scalar/100                336.24          n/a             n/a
-Deque            BulkCopy/Scalar/100                201.76          n/a             n/a
-VecDeque         BulkCopy/Scalar/100                188.44          n/a             n/a
-Vector           BulkCopy/Scalar/100                177.08          n/a             n/a
-BlockOrderBook   BulkCopy/Scalar/1000              2058.08          n/a             n/a
-Deque            BulkCopy/Scalar/1000               821.54          n/a             n/a
-VecDeque         BulkCopy/Scalar/1000               830.82          n/a             n/a
-Vector           BulkCopy/Scalar/1000               690.12          n/a             n/a
-BlockOrderBook   BulkCopy/Scalar/10000            10047.77          n/a             n/a
-Deque            BulkCopy/Scalar/10000             5927.48          n/a             n/a
-VecDeque         BulkCopy/Scalar/10000             6371.87          n/a             n/a
-Vector           BulkCopy/Scalar/10000             5639.84          n/a             n/a
-BlockOrderBook   BulkCopy/Scalar/100000          103346.01          n/a             n/a
-Deque            BulkCopy/Scalar/100000           53243.52          n/a             n/a
-VecDeque         BulkCopy/Scalar/100000           75475.58          n/a             n/a
-Vector           BulkCopy/Scalar/100000           75735.90          n/a             n/a
-BlockOrderBook   BulkCopy/Scalar/50                 226.87          n/a             n/a
-Deque            BulkCopy/Scalar/50                 130.69          n/a             n/a
-VecDeque         BulkCopy/Scalar/50                 125.38          n/a             n/a
-Vector           BulkCopy/Scalar/50                 121.98          n/a             n/a
-BlockOrderBook   BulkCopy/Scalar/500               1178.90          n/a             n/a
-Deque            BulkCopy/Scalar/500                451.52          n/a             n/a
-VecDeque         BulkCopy/Scalar/500                469.84          n/a             n/a
-Vector           BulkCopy/Scalar/500                409.75          n/a             n/a
-BlockOrderBook   RemoveMiddle/10                     18.89      18.8851     52951803.76
-Deque            RemoveMiddle/10                     14.69      14.6911     68068305.83
-VecDeque         RemoveMiddle/10                     12.76      12.7604     78367482.79
-Vector           RemoveMiddle/10                     12.74      12.7448     78463484.81
-BlockOrderBook   RemoveMiddle/100                    28.33      28.3298     35298492.82
-Deque            RemoveMiddle/100                    25.58      25.5838     39087231.40
-VecDeque         RemoveMiddle/100                    24.22      24.2221     41284624.50
-Vector           RemoveMiddle/100                    19.27      19.2687     51897624.47
-BlockOrderBook   RemoveMiddle/1000                   32.93      32.9283     30368969.98
-Deque            RemoveMiddle/1000                   59.25      59.2542     16876441.67
-VecDeque         RemoveMiddle/1000                   83.39      83.3860     11992419.81
-Vector           RemoveMiddle/1000                   43.71      43.7060     22880146.55
-BlockOrderBook   RemoveMiddle/10000                  84.62      84.6167     11817991.96
-Deque            RemoveMiddle/10000                 365.69     365.6950      2734519.25
-VecDeque         RemoveMiddle/10000                 749.14     749.1362      1334870.68
-Vector           RemoveMiddle/10000                1162.37    1162.3710       860310.53
-BlockOrderBook   RemoveMiddle/100000                 61.87      61.8653     16164156.77
-Deque            RemoveMiddle/100000               8892.67    8892.6743       112452.11
-VecDeque         RemoveMiddle/100000              19823.98   19823.9760        50443.97
-Vector           RemoveMiddle/100000              17443.20   17443.2020        57328.92
-BlockOrderBook   RemoveMiddle/50                     28.04      28.0368     35667351.88
-Deque            RemoveMiddle/50                     20.76      20.7559     48179175.50
-VecDeque         RemoveMiddle/50                     18.47      18.4662     54153121.56
-Vector           RemoveMiddle/50                     16.26      16.2575     61509946.49
-BlockOrderBook   RemoveMiddle/500                    29.08      29.0828     34384555.62
-Deque            RemoveMiddle/500                    43.98      43.9803     22737449.84
-VecDeque         RemoveMiddle/500                    51.69      51.6935     19344776.40
-Vector           RemoveMiddle/500                    31.95      31.9529     31296107.94
-BlockOrderBook   StdLowerBound/10                 67027.44      16.3641     61109303.47
-Deque            StdLowerBound/10                 18069.75       4.4116    226677142.18
-VecDeque         StdLowerBound/10                 16815.57       4.1054    243583755.72
-Vector           StdLowerBound/10                 13255.26       3.2361    309009306.55
-BlockOrderBook   StdLowerBound/100               569486.52     139.0348      7192444.17
-Deque            StdLowerBound/100                33754.94       8.2410    121345194.83
-VecDeque         StdLowerBound/100                37940.92       9.2629    107957330.97
-Vector           StdLowerBound/100                31260.52       7.6320    131027881.87
-BlockOrderBook   StdLowerBound/1000             5960125.00    1455.1086       687233.91
-Deque            StdLowerBound/1000               58371.84      14.2509     70170826.74
-VecDeque         StdLowerBound/1000               54558.34      13.3199     75075600.01
-Vector           StdLowerBound/1000               45175.86      11.0293     90667894.16
-BlockOrderBook   StdLowerBound/10000           60926125.00   14874.5422        67228.96
-Deque            StdLowerBound/10000             124953.67      30.5063     32780149.52
-VecDeque         StdLowerBound/10000             126732.57      30.9406     32320025.64
-Vector           StdLowerBound/10000             101571.04      24.7976     40326456.54
-BlockOrderBook   StdLowerBound/100000         599839000.00  146445.0684         6828.50
-Deque            StdLowerBound/100000            330861.85      80.7768     12379789.19
-VecDeque         StdLowerBound/100000            187509.59      45.7787     21844215.54
-Vector           StdLowerBound/100000            147053.94      35.9018     27853725.56
-BlockOrderBook   StdLowerBound/50                272606.62      66.5543     15025314.02
-Deque            StdLowerBound/50                 31525.92       7.6968    129924846.36
-VecDeque         StdLowerBound/50                 30708.24       7.4971    133384386.60
-Vector           StdLowerBound/50                 27234.39       6.6490    150398090.36
-BlockOrderBook   StdLowerBound/500              3007508.60     734.2550      1361924.62
-Deque            StdLowerBound/500                70262.72      17.1540     58295493.72
-VecDeque         StdLowerBound/500                46184.29      11.2755     88688159.31
-Vector           StdLowerBound/500                38112.01       9.3047    107472689.08
+BlockOrderBook   BulkCopy/Contiguous/10              59.33          n/a             n/a
+Deque            BulkCopy/Contiguous/10              18.93          n/a             n/a
+VecDeque         BulkCopy/Contiguous/10              20.78          n/a             n/a
+Vector           BulkCopy/Contiguous/10              18.23          n/a             n/a
+BlockOrderBook   BulkCopy/Contiguous/100            172.56          n/a             n/a
+Deque            BulkCopy/Contiguous/100             58.31          n/a             n/a
+VecDeque         BulkCopy/Contiguous/100            205.32          n/a             n/a
+Vector           BulkCopy/Contiguous/100            125.07          n/a             n/a
+BlockOrderBook   BulkCopy/Contiguous/1000           746.14          n/a             n/a
+Deque            BulkCopy/Contiguous/1000           364.14          n/a             n/a
+VecDeque         BulkCopy/Contiguous/1000          1289.70          n/a             n/a
+Vector           BulkCopy/Contiguous/1000          1252.47          n/a             n/a
+BlockOrderBook   BulkCopy/Contiguous/10000         3630.73          n/a             n/a
+Deque            BulkCopy/Contiguous/10000         4352.04          n/a             n/a
+VecDeque         BulkCopy/Contiguous/10000        10565.00          n/a             n/a
+Vector           BulkCopy/Contiguous/10000         9945.20          n/a             n/a
+BlockOrderBook   BulkCopy/Contiguous/100000       31104.51          n/a             n/a
+Deque            BulkCopy/Contiguous/100000       41193.34          n/a             n/a
+VecDeque         BulkCopy/Contiguous/100000       56095.01          n/a             n/a
+Vector           BulkCopy/Contiguous/100000       53140.23          n/a             n/a
+BlockOrderBook   BulkCopy/Contiguous/50             117.60          n/a             n/a
+Deque            BulkCopy/Contiguous/50              34.30          n/a             n/a
+VecDeque         BulkCopy/Contiguous/50             112.47          n/a             n/a
+Vector           BulkCopy/Contiguous/50              69.84          n/a             n/a
+BlockOrderBook   BulkCopy/Contiguous/500            400.03          n/a             n/a
+Deque            BulkCopy/Contiguous/500            182.04          n/a             n/a
+VecDeque         BulkCopy/Contiguous/500            629.92          n/a             n/a
+Vector           BulkCopy/Contiguous/500            613.69          n/a             n/a
+BlockOrderBook   BulkCopy/FixedSlice/10/10           21.41          n/a             n/a
+Deque            BulkCopy/FixedSlice/10/10           19.02          n/a             n/a
+VecDeque         BulkCopy/FixedSlice/10/10           20.18          n/a             n/a
+Vector           BulkCopy/FixedSlice/10/10           17.70          n/a             n/a
+BlockOrderBook   BulkCopy/FixedSlice/10/100          28.54          n/a             n/a
+Deque            BulkCopy/FixedSlice/10/100          24.41          n/a             n/a
+VecDeque         BulkCopy/FixedSlice/10/100          27.64          n/a             n/a
+Vector           BulkCopy/FixedSlice/10/100          18.11          n/a             n/a
+BlockOrderBook   BulkCopy/FixedSlice/10/1000         23.31          n/a             n/a
+Deque            BulkCopy/FixedSlice/10/1000        134.15          n/a             n/a
+VecDeque         BulkCopy/FixedSlice/10/1000        131.42          n/a             n/a
+Vector           BulkCopy/FixedSlice/10/1000        104.29          n/a             n/a
+BlockOrderBook   BulkCopy/FixedSlice/10/10000        38.12          n/a             n/a
+Deque            BulkCopy/FixedSlice/10/10000      1104.15          n/a             n/a
+VecDeque         BulkCopy/FixedSlice/10/10000      1053.83          n/a             n/a
+Vector           BulkCopy/FixedSlice/10/10000       740.52          n/a             n/a
+BlockOrderBook   BulkCopy/FixedSlice/10/100000        65.10          n/a             n/a
+Deque            BulkCopy/FixedSlice/10/100000     11037.83          n/a             n/a
+VecDeque         BulkCopy/FixedSlice/10/100000     10654.39          n/a             n/a
+Vector           BulkCopy/FixedSlice/10/100000      7542.38          n/a             n/a
+BlockOrderBook   BulkCopy/FixedSlice/10/50           32.28          n/a             n/a
+Deque            BulkCopy/FixedSlice/10/50           20.55          n/a             n/a
+VecDeque         BulkCopy/FixedSlice/10/50           23.94          n/a             n/a
+Vector           BulkCopy/FixedSlice/10/50           17.84          n/a             n/a
+BlockOrderBook   BulkCopy/FixedSlice/10/500          51.92          n/a             n/a
+Deque            BulkCopy/FixedSlice/10/500          69.19          n/a             n/a
+VecDeque         BulkCopy/FixedSlice/10/500          70.95          n/a             n/a
+Vector           BulkCopy/FixedSlice/10/500          51.77          n/a             n/a
+BlockOrderBook   BulkCopy/FixedSlice/100/100         89.06          n/a             n/a
+Deque            BulkCopy/FixedSlice/100/100         98.07          n/a             n/a
+VecDeque         BulkCopy/FixedSlice/100/100         91.83          n/a             n/a
+Vector           BulkCopy/FixedSlice/100/100         64.07          n/a             n/a
+BlockOrderBook   BulkCopy/FixedSlice/100/1000       108.22          n/a             n/a
+Deque            BulkCopy/FixedSlice/100/1000       216.95          n/a             n/a
+VecDeque         BulkCopy/FixedSlice/100/1000       199.29          n/a             n/a
+Vector           BulkCopy/FixedSlice/100/1000       165.82          n/a             n/a
+BlockOrderBook   BulkCopy/FixedSlice/100/10000       118.62          n/a             n/a
+Deque            BulkCopy/FixedSlice/100/10000      1190.37          n/a             n/a
+VecDeque         BulkCopy/FixedSlice/100/10000      1100.31          n/a             n/a
+Vector           BulkCopy/FixedSlice/100/10000       789.84          n/a             n/a
+BlockOrderBook   BulkCopy/FixedSlice/100/100000       122.78          n/a             n/a
+Deque            BulkCopy/FixedSlice/100/100000     11166.72          n/a             n/a
+VecDeque         BulkCopy/FixedSlice/100/100000     10571.31          n/a             n/a
+Vector           BulkCopy/FixedSlice/100/100000      7410.62          n/a             n/a
+BlockOrderBook   BulkCopy/FixedSlice/100/500        109.77          n/a             n/a
+Deque            BulkCopy/FixedSlice/100/500        153.70          n/a             n/a
+VecDeque         BulkCopy/FixedSlice/100/500        148.04          n/a             n/a
+Vector           BulkCopy/FixedSlice/100/500        109.45          n/a             n/a
+BlockOrderBook   BulkCopy/FixedSlice/1000/1000       787.92          n/a             n/a
+Deque            BulkCopy/FixedSlice/1000/1000       871.22          n/a             n/a
+VecDeque         BulkCopy/FixedSlice/1000/1000       853.80          n/a             n/a
+Vector           BulkCopy/FixedSlice/1000/1000       582.38          n/a             n/a
+BlockOrderBook   BulkCopy/FixedSlice/1000/10000       846.33          n/a             n/a
+Deque            BulkCopy/FixedSlice/1000/10000      2270.86          n/a             n/a
+VecDeque         BulkCopy/FixedSlice/1000/10000      1992.04          n/a             n/a
+Vector           BulkCopy/FixedSlice/1000/10000      1749.58          n/a             n/a
+BlockOrderBook   BulkCopy/FixedSlice/1000/100000       853.43          n/a             n/a
+Deque            BulkCopy/FixedSlice/1000/100000     12270.92          n/a             n/a
+VecDeque         BulkCopy/FixedSlice/1000/100000     11519.72          n/a             n/a
+Vector           BulkCopy/FixedSlice/1000/100000      8002.26          n/a             n/a
+BlockOrderBook   BulkCopy/FixedSlice/50/100          81.71          n/a             n/a
+Deque            BulkCopy/FixedSlice/50/100          61.19          n/a             n/a
+VecDeque         BulkCopy/FixedSlice/50/100          62.63          n/a             n/a
+Vector           BulkCopy/FixedSlice/50/100          42.42          n/a             n/a
+BlockOrderBook   BulkCopy/FixedSlice/50/1000         75.27          n/a             n/a
+Deque            BulkCopy/FixedSlice/50/1000        168.81          n/a             n/a
+VecDeque         BulkCopy/FixedSlice/50/1000        161.82          n/a             n/a
+Vector           BulkCopy/FixedSlice/50/1000        132.27          n/a             n/a
+BlockOrderBook   BulkCopy/FixedSlice/50/10000        85.22          n/a             n/a
+Deque            BulkCopy/FixedSlice/50/10000      1140.33          n/a             n/a
+VecDeque         BulkCopy/FixedSlice/50/10000      1071.26          n/a             n/a
+Vector           BulkCopy/FixedSlice/50/10000       770.11          n/a             n/a
+BlockOrderBook   BulkCopy/FixedSlice/50/100000        86.09          n/a             n/a
+Deque            BulkCopy/FixedSlice/50/100000     10993.08          n/a             n/a
+VecDeque         BulkCopy/FixedSlice/50/100000     10486.12          n/a             n/a
+Vector           BulkCopy/FixedSlice/50/100000      7482.82          n/a             n/a
+BlockOrderBook   BulkCopy/FixedSlice/50/50           54.18          n/a             n/a
+Deque            BulkCopy/FixedSlice/50/50           46.19          n/a             n/a
+VecDeque         BulkCopy/FixedSlice/50/50           54.94          n/a             n/a
+Vector           BulkCopy/FixedSlice/50/50           29.45          n/a             n/a
+BlockOrderBook   BulkCopy/FixedSlice/50/500          77.68          n/a             n/a
+Deque            BulkCopy/FixedSlice/50/500         103.71          n/a             n/a
+VecDeque         BulkCopy/FixedSlice/50/500         107.18          n/a             n/a
+Vector           BulkCopy/FixedSlice/50/500          82.41          n/a             n/a
+BlockOrderBook   BulkCopy/FixedSlice/500/1000       475.93          n/a             n/a
+Deque            BulkCopy/FixedSlice/500/1000       558.84          n/a             n/a
+VecDeque         BulkCopy/FixedSlice/500/1000       549.08          n/a             n/a
+Vector           BulkCopy/FixedSlice/500/1000       390.51          n/a             n/a
+BlockOrderBook   BulkCopy/FixedSlice/500/10000       448.72          n/a             n/a
+Deque            BulkCopy/FixedSlice/500/10000      1545.79          n/a             n/a
+VecDeque         BulkCopy/FixedSlice/500/10000      1471.33          n/a             n/a
+Vector           BulkCopy/FixedSlice/500/10000      1055.00          n/a             n/a
+BlockOrderBook   BulkCopy/FixedSlice/500/100000       481.74          n/a             n/a
+Deque            BulkCopy/FixedSlice/500/100000     11677.00          n/a             n/a
+VecDeque         BulkCopy/FixedSlice/500/100000     10971.62          n/a             n/a
+Vector           BulkCopy/FixedSlice/500/100000      7751.12          n/a             n/a
+BlockOrderBook   BulkCopy/FixedSlice/500/500        460.55          n/a             n/a
+Deque            BulkCopy/FixedSlice/500/500        438.90          n/a             n/a
+VecDeque         BulkCopy/FixedSlice/500/500        448.22          n/a             n/a
+Vector           BulkCopy/FixedSlice/500/500        303.62          n/a             n/a
+BlockOrderBook   BulkCopy/Scalar/10                  70.96          n/a             n/a
+Deque            BulkCopy/Scalar/10                  25.45          n/a             n/a
+VecDeque         BulkCopy/Scalar/10                  24.37          n/a             n/a
+Vector           BulkCopy/Scalar/10                  23.38          n/a             n/a
+BlockOrderBook   BulkCopy/Scalar/100                341.66          n/a             n/a
+Deque            BulkCopy/Scalar/100                194.49          n/a             n/a
+VecDeque         BulkCopy/Scalar/100                190.42          n/a             n/a
+Vector           BulkCopy/Scalar/100                179.67          n/a             n/a
+BlockOrderBook   BulkCopy/Scalar/1000              2068.69          n/a             n/a
+Deque            BulkCopy/Scalar/1000               766.28          n/a             n/a
+VecDeque         BulkCopy/Scalar/1000               823.65          n/a             n/a
+Vector           BulkCopy/Scalar/1000               676.99          n/a             n/a
+BlockOrderBook   BulkCopy/Scalar/10000            10029.86          n/a             n/a
+Deque            BulkCopy/Scalar/10000             5952.25          n/a             n/a
+VecDeque         BulkCopy/Scalar/10000             6383.61          n/a             n/a
+Vector           BulkCopy/Scalar/10000             5615.24          n/a             n/a
+BlockOrderBook   BulkCopy/Scalar/100000          102848.30          n/a             n/a
+Deque            BulkCopy/Scalar/100000           78048.29          n/a             n/a
+VecDeque         BulkCopy/Scalar/100000           83613.09          n/a             n/a
+Vector           BulkCopy/Scalar/100000           72830.26          n/a             n/a
+BlockOrderBook   BulkCopy/Scalar/50                 230.80          n/a             n/a
+Deque            BulkCopy/Scalar/50                 132.46          n/a             n/a
+VecDeque         BulkCopy/Scalar/50                 129.68          n/a             n/a
+Vector           BulkCopy/Scalar/50                 124.24          n/a             n/a
+BlockOrderBook   BulkCopy/Scalar/500               1183.20          n/a             n/a
+Deque            BulkCopy/Scalar/500                447.10          n/a             n/a
+VecDeque         BulkCopy/Scalar/500                469.82          n/a             n/a
+Vector           BulkCopy/Scalar/500                410.73          n/a             n/a
+BlockOrderBook   RemoveMiddle/10                     18.80      18.7986     53195474.52
+Deque            RemoveMiddle/10                     15.14      15.1441     66032338.69
+VecDeque         RemoveMiddle/10                     13.61      13.6072     73490540.48
+Vector           RemoveMiddle/10                     12.79      12.7924     78171148.42
+BlockOrderBook   RemoveMiddle/100                    28.37      28.3656     35253963.43
+Deque            RemoveMiddle/100                    25.59      25.5884     39080190.26
+VecDeque         RemoveMiddle/100                    24.59      24.5902     40666528.39
+Vector           RemoveMiddle/100                    19.39      19.3864     51582500.74
+BlockOrderBook   RemoveMiddle/1000                   33.27      33.2748     30052804.25
+Deque            RemoveMiddle/1000                   59.39      59.3866     16838820.93
+VecDeque         RemoveMiddle/1000                   82.80      82.7979     12077597.93
+Vector           RemoveMiddle/1000                   44.20      44.1984     22625275.40
+BlockOrderBook   RemoveMiddle/10000                  92.26      92.2573     10839255.68
+Deque            RemoveMiddle/10000                 366.15     366.1483      2731133.71
+VecDeque         RemoveMiddle/10000                 750.01     750.0070      1333320.85
+Vector           RemoveMiddle/10000                1126.62    1126.6211       887609.87
+BlockOrderBook   RemoveMiddle/100000                 57.21      57.2083     17479992.14
+Deque            RemoveMiddle/100000               8962.12    8962.1210       111580.73
+VecDeque         RemoveMiddle/100000              18189.96   18189.9609        54975.38
+Vector           RemoveMiddle/100000              17302.34   17302.3428        57795.64
+BlockOrderBook   RemoveMiddle/50                     28.40      28.4006     35210507.13
+Deque            RemoveMiddle/50                     20.71      20.7114     48282576.53
+VecDeque         RemoveMiddle/50                     19.58      19.5798     51073088.80
+Vector           RemoveMiddle/50                     16.39      16.3909     61009450.84
+BlockOrderBook   RemoveMiddle/500                    29.37      29.3728     34045104.78
+Deque            RemoveMiddle/500                    43.88      43.8831     22787817.80
+VecDeque         RemoveMiddle/500                    52.43      52.4318     19072379.41
+Vector           RemoveMiddle/500                    31.74      31.7360     31509966.34
+BlockOrderBook   StdLowerBound/10                 62185.79      15.1821     65867133.87
+Deque            StdLowerBound/10                 18339.24       4.4774    223346274.71
+VecDeque         StdLowerBound/10                 17012.44       4.1534    240765018.78
+Vector           StdLowerBound/10                 12789.46       3.1224    320263618.82
+BlockOrderBook   StdLowerBound/100               597642.33     145.9088      6853597.50
+Deque            StdLowerBound/100                33785.33       8.2484    121236033.46
+VecDeque         StdLowerBound/100                38218.25       9.3306    107173930.61
+Vector           StdLowerBound/100                31033.78       7.5766    131985230.81
+BlockOrderBook   StdLowerBound/1000             5964041.50    1456.0648       686782.61
+Deque            StdLowerBound/1000               57840.06      14.1211     70815968.06
+VecDeque         StdLowerBound/1000               54740.17      13.3643     74826226.29
+Vector           StdLowerBound/1000               44809.98      10.9399     91408213.88
+BlockOrderBook   StdLowerBound/10000           60194583.00   14695.9431        68045.99
+Deque            StdLowerBound/10000             110516.64      26.9816     37062291.45
+VecDeque         StdLowerBound/10000             123946.22      30.2603     33046591.18
+Vector           StdLowerBound/10000             103703.09      25.3181     39497377.02
+BlockOrderBook   StdLowerBound/100000         592711583.00  144704.9763         6910.61
+Deque            StdLowerBound/100000            312531.83      76.3017     13105864.95
+VecDeque         StdLowerBound/100000            180642.14      44.1021     22674664.82
+Vector           StdLowerBound/100000            153785.76      37.5454     26634455.93
+BlockOrderBook   StdLowerBound/50                270155.38      65.9559     15161644.87
+Deque            StdLowerBound/50                 30606.13       7.4722    133829384.32
+VecDeque         StdLowerBound/50                 30684.27       7.4913    133488574.76
+Vector           StdLowerBound/50                 23819.45       5.8153    171960345.78
+BlockOrderBook   StdLowerBound/500              3005391.80     733.7382      1362883.87
+Deque            StdLowerBound/500                60216.42      14.7013     68021315.93
+VecDeque         StdLowerBound/500                46084.45      11.2511     88880298.00
+Vector           StdLowerBound/500                38235.36       9.3348    107125970.18
+BlockOrderBook   Steady/PushBackPopFront/10          31.07      31.0702     32185208.22
+Deque            Steady/PushBackPopFront/10          12.35      12.3513     80963380.15
+VecDeque         Steady/PushBackPopFront/10          14.24      14.2444     70202913.73
+BlockOrderBook   Steady/PushBackPopFront/100         26.00      25.9994     38462414.44
+Deque            Steady/PushBackPopFront/100         12.37      12.3745     80811044.37
+VecDeque         Steady/PushBackPopFront/100         14.26      14.2581     70135804.65
+BlockOrderBook   Steady/PushBackPopFront/1000        29.67      29.6726     33701076.37
+Deque            Steady/PushBackPopFront/1000        12.38      12.3807     80770880.64
+VecDeque         Steady/PushBackPopFront/1000        14.24      14.2445     70202389.81
+BlockOrderBook   Steady/PushBackPopFront/10000        48.54      48.5392     20601912.96
+Deque            Steady/PushBackPopFront/10000        12.22      12.2170     81852870.53
+VecDeque         Steady/PushBackPopFront/10000        14.26      14.2643     70104869.03
+BlockOrderBook   Steady/PushBackPopFront/100000       498.79     498.7914      2004845.94
+Deque            Steady/PushBackPopFront/100000        12.20      12.2016     81956570.36
+VecDeque         Steady/PushBackPopFront/100000        14.28      14.2806     70024961.57
+BlockOrderBook   Steady/PushBackPopFront/50          24.85      24.8471     40246099.84
+Deque            Steady/PushBackPopFront/50          12.40      12.4021     80631317.14
+VecDeque         Steady/PushBackPopFront/50          14.25      14.2496     70177551.77
+BlockOrderBook   Steady/PushBackPopFront/500         28.76      28.7578     34773147.97
+Deque            Steady/PushBackPopFront/500         12.42      12.4161     80540816.42
+VecDeque         Steady/PushBackPopFront/500         14.22      14.2214     70316471.78
+BlockOrderBook   Steady/PushFrontPopBack/10          31.56      31.5641     31681561.71
+Deque            Steady/PushFrontPopBack/10          12.25      12.2517     81621411.18
+VecDeque         Steady/PushFrontPopBack/10          14.03      14.0316     71267591.63
+BlockOrderBook   Steady/PushFrontPopBack/100         26.28      26.2821     38048660.44
+Deque            Steady/PushFrontPopBack/100         12.24      12.2359     81727023.23
+VecDeque         Steady/PushFrontPopBack/100         14.00      14.0030     71413322.47
+BlockOrderBook   Steady/PushFrontPopBack/1000        29.87      29.8726     33475437.45
+Deque            Steady/PushFrontPopBack/1000        12.26      12.2613     81557285.47
+VecDeque         Steady/PushFrontPopBack/1000        14.02      14.0235     71308918.14
+BlockOrderBook   Steady/PushFrontPopBack/10000        49.29      49.2875     20289108.06
+Deque            Steady/PushFrontPopBack/10000        12.25      12.2483     81644007.40
+VecDeque         Steady/PushFrontPopBack/10000        14.04      14.0433     71208226.15
+BlockOrderBook   Steady/PushFrontPopBack/100000       506.76     506.7569      1973332.69
+Deque            Steady/PushFrontPopBack/100000        12.28      12.2834     81410389.31
+VecDeque         Steady/PushFrontPopBack/100000        14.03      14.0287     71282446.08
+BlockOrderBook   Steady/PushFrontPopBack/50          25.88      25.8829     38635492.17
+Deque            Steady/PushFrontPopBack/50          12.26      12.2644     81537136.50
+VecDeque         Steady/PushFrontPopBack/50          14.05      14.0463     71193116.88
+BlockOrderBook   Steady/PushFrontPopBack/500         28.76      28.7638     34765958.62
+Deque            Steady/PushFrontPopBack/500         12.28      12.2784     81443702.62
+VecDeque         Steady/PushFrontPopBack/500         14.05      14.0498     71175538.65

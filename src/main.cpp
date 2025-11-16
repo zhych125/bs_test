@@ -346,6 +346,53 @@ void RunRemoveBenchmark(benchmark::State& state) {
   state.SetComplexityN(static_cast<long>(size));
 }
 
+template <typename Container>
+void RunSteadyPushPopBenchmark(benchmark::State& state, bool push_back_pop_front) {
+  const std::size_t size = static_cast<std::size_t>(state.range(0));
+  OrderGenerator base_gen(100'000 + size);
+  Container container = make_container<Container>(base_gen.generate(size));
+
+  OrderGenerator churn_gen(120'000 + size);
+  apply_churn(container, churn_gen, churn_ops_for_size(size));
+
+  OrderGenerator tombstone_gen(140'000 + size);
+  std::vector<std::uint64_t> ids;
+  ids.reserve(container.size());
+  for (const auto& order : container) {
+    ids.push_back(order.id);
+  }
+  std::mt19937_64 remove_rng(160'000 + size);
+  const std::size_t tombstones = std::min<std::size_t>(ids.size() / 10, 100);
+  for (std::size_t i = 0; i < tombstones && !ids.empty(); ++i) {
+    std::size_t idx = static_cast<std::size_t>(remove_rng() % ids.size());
+    const auto target = ids[idx];
+    if (erase_order(container, target)) {
+      ids[idx] = ids.back();
+      ids.pop_back();
+      container.push_back(tombstone_gen.next_order());
+      ids.push_back(container.back().id);
+    }
+  }
+
+  OrderGenerator op_gen(180'000 + size);
+
+  for (auto _ : state) {
+    auto new_order = op_gen.next_order();
+    const auto start = Clock::now();
+    if (push_back_pop_front) {
+      container.push_back(new_order);
+      container.pop_front();
+    } else {
+      container.push_front(new_order);
+      container.pop_back();
+    }
+    const auto end = Clock::now();
+    state.SetIterationTime(std::chrono::duration<double>(end - start).count());
+  }
+  state.SetItemsProcessed(state.iterations());
+  state.SetComplexityN(static_cast<long>(size));
+}
+
 template <typename Container, typename Search>
 void RegisterBenchmarks(const std::string& name, Search search) {
   auto* bench = benchmark::RegisterBenchmark(name.c_str(),
@@ -513,6 +560,26 @@ void RegisterRemoveBenchmarks(const std::string& name) {
     bench->Arg(static_cast<int>(size));
   }
 }
+
+template <typename Container>
+void RegisterSteadyPushPopBenchmarks(const std::string& prefix) {
+  auto* push_back_pop_front = benchmark::RegisterBenchmark(
+      (prefix + "/PushBackPopFront").c_str(),
+      [](benchmark::State& state) {
+        RunSteadyPushPopBenchmark<Container>(state, true);
+      });
+  push_back_pop_front->UseManualTime();
+  auto* push_front_pop_back = benchmark::RegisterBenchmark(
+      (prefix + "/PushFrontPopBack").c_str(),
+      [](benchmark::State& state) {
+        RunSteadyPushPopBenchmark<Container>(state, false);
+      });
+  push_front_pop_back->UseManualTime();
+  for (auto size : kSizes) {
+    push_back_pop_front->Arg(static_cast<int>(size));
+    push_front_pop_back->Arg(static_cast<int>(size));
+  }
+}
 }  // namespace
 
 int main(int argc, char** argv) {
@@ -537,6 +604,9 @@ int main(int argc, char** argv) {
   RegisterRemoveBenchmarks<std::deque<Order>>("Deque/RemoveMiddle");
   RegisterRemoveBenchmarks<VecDeque<Order>>("VecDeque/RemoveMiddle");
   RegisterRemoveBenchmarks<BlockOrderBook>("BlockOrderBook/RemoveMiddle");
+  RegisterSteadyPushPopBenchmarks<std::deque<Order>>("Deque/Steady");
+  RegisterSteadyPushPopBenchmarks<VecDeque<Order>>("VecDeque/Steady");
+  RegisterSteadyPushPopBenchmarks<BlockOrderBook>("BlockOrderBook/Steady");
 
   ::benchmark::RunSpecifiedBenchmarks();
   ::benchmark::Shutdown();
