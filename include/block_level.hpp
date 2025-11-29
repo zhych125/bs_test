@@ -265,6 +265,23 @@ class VolumeBreakdown {
             const_iterator(this, finish.first, finish.second)};
   }
 
+  class VolumeRangeView {
+   public:
+    VolumeRangeView(const_iterator begin, const_iterator end) : begin_(begin), end_(end) {}
+    const_iterator begin() const { return begin_; }
+    const_iterator end() const { return end_; }
+    bool empty() const { return begin_ == end_; }
+
+   private:
+    const_iterator begin_;
+    const_iterator end_;
+  };
+
+  VolumeRangeView volume_view(std::int64_t lower, std::int64_t upper) const {
+    auto range = volume_range(lower, upper);
+    return VolumeRangeView(range.first, range.second);
+  }
+
  private:
   iterator erase_at(BlockType* block, size_type index) {
     const std::uint64_t id = (*block)[index].id;
