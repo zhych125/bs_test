@@ -12,18 +12,31 @@
 #include <utility>
 #include <vector>
 
-#include "block_order_book.hpp"
+#include <absl/container/flat_hash_set.h>
+
+#include "block_level.hpp"
 #include "order.hpp"
 #include "order_generator.hpp"
 #include "vec_deque.hpp"
 
 namespace {
 
+using OrderVolumeBreakdown = VolumeBreakdown<Order>;
+
 constexpr std::array<std::size_t, 7> kSizes{10, 50, 100, 500, 1000, 10'000, 100'000};
 constexpr std::size_t kQueryCount = 4'096;
 constexpr double kHitRatio = 0.5;
 
 using Clock = std::chrono::steady_clock;
+
+constexpr std::size_t kCacheThrashBytes = 2 * 1024 * 1024;
+
+inline void ThrashCache(std::vector<std::uint8_t>& buffer) {
+  for (std::size_t i = 0; i < buffer.size(); i += 64) {
+    buffer[i] += static_cast<std::uint8_t>(i);
+  }
+  benchmark::DoNotOptimize(buffer.data());
+}
 
 template <typename Container>
 Container make_container(const std::vector<Order>& orders);
@@ -48,8 +61,8 @@ VecDeque<Order> make_container(const std::vector<Order>& orders) {
 }
 
 template <>
-BlockOrderBook make_container(const std::vector<Order>& orders) {
-  BlockOrderBook out;
+OrderVolumeBreakdown make_container(const std::vector<Order>& orders) {
+  OrderVolumeBreakdown out;
   for (const auto& order : orders) {
     out.push_back(order);
   }
@@ -101,7 +114,7 @@ void apply_churn(VecDeque<Order>& container, OrderGenerator& generator, std::siz
 }
 
 template <>
-void apply_churn(BlockOrderBook& container, OrderGenerator& generator, std::size_t operations) {
+void apply_churn(OrderVolumeBreakdown& container, OrderGenerator& generator, std::size_t operations) {
   if (container.empty()) {
     return;
   }
@@ -129,7 +142,7 @@ bool erase_order(Container& container, std::uint64_t id) {
 }
 
 template <>
-bool erase_order(BlockOrderBook& container, std::uint64_t id) {
+bool erase_order(OrderVolumeBreakdown& container, std::uint64_t id) {
   return container.erase_by_id(id);
 }
 
@@ -145,25 +158,32 @@ void RunBenchmark(benchmark::State& state, Search search) {
   apply_churn(container, churn_generator, churn_ops_for_size(size));
 
   std::vector<Order> snapshot(container.begin(), container.end());
+  std::vector<std::uint8_t> cache_buffer(kCacheThrashBytes, 0);
 
   std::mt19937_64 query_rng(111 * size + 7);
-  auto query_ids = make_query_ids(snapshot, kQueryCount, kHitRatio, query_rng);
+  std::uniform_int_distribution<std::size_t> index_dist;
+  if (!snapshot.empty()) {
+    index_dist = std::uniform_int_distribution<std::size_t>(0, snapshot.size() - 1);
+  }
 
   for (auto _ : state) {
-    const auto start = Clock::now();
-    std::size_t checksum = 0;
-    for (auto id : query_ids) {
-      auto it = search(container, id);
-      bool found = (it != container.end() && it->id == id);
-      checksum += found ? 1 : 0;
-      benchmark::DoNotOptimize(it);
+    const bool want_hit = (query_rng() & 1u) == 0;
+    std::uint64_t id = static_cast<std::uint64_t>(query_rng());
+    if (want_hit && !snapshot.empty()) {
+      id = snapshot[index_dist(query_rng)].id;
+    } else {
+      id ^= 0x5bd1'0000'0000'0000ull;
     }
-    benchmark::DoNotOptimize(checksum);
+
+    ThrashCache(cache_buffer);
+    const auto start = Clock::now();
+    auto it = search(container, id);
+    benchmark::DoNotOptimize(it);
     const auto end = Clock::now();
     state.SetIterationTime(std::chrono::duration<double>(end - start).count());
   }
-  const auto queries_per_iteration = static_cast<std::int64_t>(query_ids.size());
-  state.SetItemsProcessed(state.iterations() * queries_per_iteration);
+
+  state.SetItemsProcessed(state.iterations());
   state.SetComplexityN(static_cast<long>(size));
 }
 
@@ -171,6 +191,10 @@ constexpr auto StdLowerBoundSearch = [](auto& container, std::uint64_t id) {
   return std::lower_bound(
       container.begin(), container.end(), id,
       [](const Order& lhs, std::uint64_t rhs) { return lhs.id < rhs; });
+};
+
+constexpr auto VolumeBreakdownFindSearch = [](auto& container, std::uint64_t id) {
+  return container.find(id);
 };
 
 std::pair<std::int64_t, std::int64_t> compute_sum_bounds(const std::vector<Order>& orders) {
@@ -206,8 +230,8 @@ std::pair<std::int64_t, std::int64_t> compute_sum_bounds(const std::vector<Order
   return {lower, upper};
 }
 
-template <typename Container, typename CopyFn>
-void RunBulkCopyBenchmark(benchmark::State& state, CopyFn copy_fn) {
+template <typename Container, typename RangeSelector>
+void RunRangeIterationBenchmark(benchmark::State& state, RangeSelector select_range) {
   const std::size_t size = static_cast<std::size_t>(state.range(0));
   OrderGenerator generator(333 + size);
   auto base = generator.generate(size);
@@ -223,10 +247,12 @@ void RunBulkCopyBenchmark(benchmark::State& state, CopyFn copy_fn) {
   for (const auto& order : container) {
     removal_ids.push_back(order.id);
   }
-  std::mt19937_64 remove_rng(150'000 + size);
+  std::mt19937_64 remove_rng(200'000 + size);
 
-  std::size_t last_copied = 0;
+  std::vector<std::uint8_t> cache_buffer(kCacheThrashBytes, 0);
+  std::size_t last_selected = 0;
   for (auto _ : state) {
+    ThrashCache(cache_buffer);
     if (!removal_ids.empty()) {
       std::size_t idx = static_cast<std::size_t>(remove_rng() % removal_ids.size());
       const auto target_id = removal_ids[idx];
@@ -238,23 +264,28 @@ void RunBulkCopyBenchmark(benchmark::State& state, CopyFn copy_fn) {
         removal_ids.push_back(new_order.id);
       }
     }
-    std::vector<Order> buffer;
     const auto start = Clock::now();
-    copy_fn(container, bounds.first, bounds.second, buffer);
-    last_copied = buffer.size();
-    benchmark::DoNotOptimize(buffer.data());
+    auto range = select_range(static_cast<const Container&>(container), bounds.first, bounds.second);
+    std::int64_t volume_sum = 0;
+    std::size_t count = 0;
+    for (auto it = range.first; it != range.second; ++it) {
+      volume_sum += it->volume;
+      ++count;
+    }
+    last_selected = count;
+    benchmark::DoNotOptimize(volume_sum);
     const auto end = Clock::now();
     state.SetIterationTime(std::chrono::duration<double>(end - start).count());
   }
 
   const double ratio =
-      container.empty() ? 0.0 : static_cast<double>(last_copied) / container.size();
+      container.empty() ? 0.0 : static_cast<double>(last_selected) / container.size();
   state.counters["selected_ratio"] = ratio;
   state.SetComplexityN(static_cast<long>(size));
 }
 
-template <typename Container, typename CopyFn>
-void RunCumsumSliceBulkCopyBenchmark(benchmark::State& state, std::size_t target_len, CopyFn copy_fn) {
+template <typename Container, typename RangeSelector>
+void RunCumsumSliceRangeBenchmark(benchmark::State& state, std::size_t target_len, RangeSelector select_range) {
   const std::size_t size = static_cast<std::size_t>(state.range(0));
   OrderGenerator generator(40'000 + size);
   auto base = generator.generate(size);
@@ -293,15 +324,22 @@ void RunCumsumSliceBulkCopyBenchmark(benchmark::State& state, std::size_t target
 
   const std::size_t slice_len = end_idx - start_idx;
 
+  std::vector<std::uint8_t> cache_buffer(kCacheThrashBytes, 0);
   for (auto _ : state) {
+    ThrashCache(cache_buffer);
     const auto start = Clock::now();
-    std::vector<Order> buffer;
-    copy_fn(container, lower_volume, upper_volume, buffer);
-    benchmark::DoNotOptimize(buffer.data());
+    auto range = select_range(static_cast<const Container&>(container), lower_volume, upper_volume);
+    std::int64_t volume_sum = 0;
+    for (auto it = range.first; it != range.second; ++it) {
+      volume_sum += it->volume;
+    }
+    benchmark::DoNotOptimize(volume_sum);
     const auto finish = Clock::now();
     state.SetIterationTime(std::chrono::duration<double>(finish - start).count());
   }
-  state.counters["selected_ratio"] = container.empty() ? 0.0 : static_cast<double>(slice_len) / container.size();
+
+  state.counters["selected_ratio"] =
+      container.empty() ? 0.0 : static_cast<double>(slice_len) / container.size();
   state.SetComplexityN(static_cast<long>(slice_len));
 }
 
@@ -322,7 +360,9 @@ void RunRemoveBenchmark(benchmark::State& state) {
   }
   std::mt19937_64 remove_rng(1'000 + size);
 
+  std::vector<std::uint8_t> cache_buffer(kCacheThrashBytes, 0);
   for (auto _ : state) {
+    ThrashCache(cache_buffer);
     if (removal_ids.empty()) {
       break;
     }
@@ -347,7 +387,7 @@ void RunRemoveBenchmark(benchmark::State& state) {
 }
 
 template <typename Container>
-void RunSteadyPushPopBenchmark(benchmark::State& state, bool push_back_pop_front) {
+void RunSteadyPushPopBenchmark(benchmark::State& state, bool time_push_back) {
   const std::size_t size = static_cast<std::size_t>(state.range(0));
   OrderGenerator base_gen(100'000 + size);
   Container container = make_container<Container>(base_gen.generate(size));
@@ -355,39 +395,38 @@ void RunSteadyPushPopBenchmark(benchmark::State& state, bool push_back_pop_front
   OrderGenerator churn_gen(120'000 + size);
   apply_churn(container, churn_gen, churn_ops_for_size(size));
 
-  OrderGenerator tombstone_gen(140'000 + size);
-  std::vector<std::uint64_t> ids;
-  ids.reserve(container.size());
+  absl::flat_hash_set<std::uint64_t> id_set;
   for (const auto& order : container) {
-    ids.push_back(order.id);
-  }
-  std::mt19937_64 remove_rng(160'000 + size);
-  const std::size_t tombstones = std::min<std::size_t>(ids.size() / 10, 100);
-  for (std::size_t i = 0; i < tombstones && !ids.empty(); ++i) {
-    std::size_t idx = static_cast<std::size_t>(remove_rng() % ids.size());
-    const auto target = ids[idx];
-    if (erase_order(container, target)) {
-      ids[idx] = ids.back();
-      ids.pop_back();
-      container.push_back(tombstone_gen.next_order());
-      ids.push_back(container.back().id);
-    }
+    id_set.insert(order.id);
   }
 
   OrderGenerator op_gen(180'000 + size);
 
+  std::vector<std::uint8_t> cache_buffer(kCacheThrashBytes, 0);
   for (auto _ : state) {
+    ThrashCache(cache_buffer);
     auto new_order = op_gen.next_order();
     const auto start = Clock::now();
-    if (push_back_pop_front) {
+    if (time_push_back) {
       container.push_back(new_order);
-      container.pop_front();
+      id_set.insert(new_order.id);
     } else {
-      container.push_front(new_order);
-      container.pop_back();
+      if (!container.empty()) {
+        id_set.erase(container.front().id);
+        container.pop_front();
+      }
     }
     const auto end = Clock::now();
     state.SetIterationTime(std::chrono::duration<double>(end - start).count());
+    if (time_push_back) {
+      if (!container.empty()) {
+        id_set.erase(container.front().id);
+        container.pop_front();
+      }
+    } else {
+      container.push_back(new_order);
+      id_set.insert(new_order.id);
+    }
   }
   state.SetItemsProcessed(state.iterations());
   state.SetComplexityN(static_cast<long>(size));
@@ -459,94 +498,7 @@ void RegisterBulkCopyBenchmarks(const std::string& prefix) {
   }
 }
 
-template <>
-void RegisterBulkCopyBenchmarks<BlockOrderBook>(const std::string& prefix) {
-  auto scalar = benchmark::RegisterBenchmark(
-      (prefix + "/Scalar").c_str(),
-      [](benchmark::State& state) {
-        RunBulkCopyBenchmark<BlockOrderBook>(
-            state, [](const BlockOrderBook& cont, std::int64_t lower, std::int64_t upper, std::vector<Order>& out) {
-              std::int64_t sum = 0;
-              for (auto it = cont.begin(); it != cont.end(); ++it) {
-                sum += it->volume;
-                if (sum >= lower && sum <= upper) {
-                  out.push_back(*it);
-                } else if (sum > upper) {
-                  break;
-                }
-              }
-            });
-      });
-  scalar->UseManualTime();
-  auto contiguous = benchmark::RegisterBenchmark(
-      (prefix + "/Contiguous").c_str(),
-      [](benchmark::State& state) {
-        RunBulkCopyBenchmark<BlockOrderBook>(
-            state, [](const BlockOrderBook& cont, std::int64_t lower, std::int64_t upper, std::vector<Order>& out) {
-              cont.copy_volume_range(lower, upper, out);
-            });
-      });
-  contiguous->UseManualTime();
-  for (auto size : kSizes) {
-    scalar->Arg(static_cast<int>(size));
-    contiguous->Arg(static_cast<int>(size));
-  }
-}
-
 constexpr std::array<std::size_t, 5> kFixedSlices{10, 50, 100, 500, 1000};
-
-template <typename Container>
-void RegisterFixedSliceBulkCopyBenchmarks(const std::string& prefix) {
-  for (auto slice : kFixedSlices) {
-    auto* bench = benchmark::RegisterBenchmark(
-        (prefix + "/FixedSlice/" + std::to_string(slice)).c_str(),
-        [slice](benchmark::State& state) {
-          RunCumsumSliceBulkCopyBenchmark<Container>(
-              state, slice,
-              [](const Container& cont, std::int64_t lower, std::int64_t upper, std::vector<Order>& out) {
-                std::int64_t sum = 0;
-                auto it = cont.begin();
-                while (it != cont.end() && sum + it->volume <= lower) {
-                  sum += it->volume;
-                  ++it;
-                }
-                auto begin_it = it;
-                while (it != cont.end() && sum < upper) {
-                  sum += it->volume;
-                  ++it;
-                }
-                out.insert(out.end(), begin_it, it);
-              });
-        });
-    bench->UseManualTime();
-    for (auto size : kSizes) {
-      if (size >= slice) {
-        bench->Arg(static_cast<int>(size));
-      }
-    }
-  }
-}
-
-template <>
-void RegisterFixedSliceBulkCopyBenchmarks<BlockOrderBook>(const std::string& prefix) {
-  for (auto slice : kFixedSlices) {
-    auto* bench = benchmark::RegisterBenchmark(
-        (prefix + "/FixedSlice/" + std::to_string(slice)).c_str(),
-        [slice](benchmark::State& state) {
-          RunCumsumSliceBulkCopyBenchmark<BlockOrderBook>(
-              state, slice,
-              [](const BlockOrderBook& cont, std::int64_t lower, std::int64_t upper, std::vector<Order>& out) {
-                cont.copy_volume_range(lower + 1, upper, out);
-              });
-        });
-    bench->UseManualTime();
-    for (auto size : kSizes) {
-      if (size >= slice) {
-        bench->Arg(static_cast<int>(size));
-      }
-    }
-  }
-}
 
 template <typename Container>
 void RegisterRemoveBenchmarks(const std::string& name) {
@@ -563,21 +515,94 @@ void RegisterRemoveBenchmarks(const std::string& name) {
 
 template <typename Container>
 void RegisterSteadyPushPopBenchmarks(const std::string& prefix) {
-  auto* push_back_pop_front = benchmark::RegisterBenchmark(
-      (prefix + "/PushBackPopFront").c_str(),
+  auto* push_back = benchmark::RegisterBenchmark(
+      (prefix + "/PushBack").c_str(),
       [](benchmark::State& state) {
         RunSteadyPushPopBenchmark<Container>(state, true);
       });
-  push_back_pop_front->UseManualTime();
-  auto* push_front_pop_back = benchmark::RegisterBenchmark(
-      (prefix + "/PushFrontPopBack").c_str(),
+  push_back->UseManualTime();
+  auto* pop_front = benchmark::RegisterBenchmark(
+      (prefix + "/PopFront").c_str(),
       [](benchmark::State& state) {
         RunSteadyPushPopBenchmark<Container>(state, false);
       });
-  push_front_pop_back->UseManualTime();
+  pop_front->UseManualTime();
   for (auto size : kSizes) {
-    push_back_pop_front->Arg(static_cast<int>(size));
-    push_front_pop_back->Arg(static_cast<int>(size));
+    push_back->Arg(static_cast<int>(size));
+    pop_front->Arg(static_cast<int>(size));
+  }
+}
+
+template <typename Container>
+void RegisterRangeViewBenchmarks(const std::string& prefix) {
+  auto* contiguous = benchmark::RegisterBenchmark(
+      (prefix + "/RangeIter/Contiguous").c_str(),
+      [](benchmark::State& state) {
+        RunRangeIterationBenchmark<Container>(
+            state, [](const Container& cont, std::int64_t lower, std::int64_t upper) {
+              if constexpr (std::is_same_v<Container, OrderVolumeBreakdown>) {
+                auto range = cont.volume_range(lower, upper);
+                return std::make_pair(range.first, range.second);
+              } else {
+                std::int64_t sum = 0;
+                auto first = cont.begin();
+                while (first != cont.end() && sum < lower) {
+                  sum += first->volume;
+                  if (sum < lower) {
+                    ++first;
+                  }
+                }
+                auto last = first;
+                while (last != cont.end() && sum <= upper) {
+                  sum += last->volume;
+                  if (sum <= upper) {
+                    ++last;
+                  }
+                }
+                return std::make_pair(first, last);
+              }
+            });
+      });
+  contiguous->UseManualTime();
+  for (auto size : kSizes) {
+    contiguous->Arg(static_cast<int>(size));
+  }
+}
+
+template <typename Container>
+void RegisterFixedSliceRangeBenchmarks(const std::string& prefix) {
+  for (auto slice : kFixedSlices) {
+    auto* bench = benchmark::RegisterBenchmark(
+        (prefix + "/RangeIter/FixedSlice/" + std::to_string(slice)).c_str(),
+        [slice](benchmark::State& state) {
+          RunCumsumSliceRangeBenchmark<Container>(
+              state, slice,
+              [](const Container& cont, std::int64_t lower, std::int64_t upper) {
+                if constexpr (std::is_same_v<Container, OrderVolumeBreakdown>) {
+                  auto range = cont.volume_range(lower, upper);
+                  return std::make_pair(range.first, range.second);
+                } else {
+                  std::int64_t sum = 0;
+                  auto it = cont.begin();
+                  while (it != cont.end() && sum + it->volume <= lower) {
+                    sum += it->volume;
+                    ++it;
+                  }
+                  auto begin_it = it;
+                  while (it != cont.end() && sum < upper) {
+                    sum += it->volume;
+                    ++it;
+                  }
+                  return std::make_pair(begin_it, it);
+                }
+              });
+        });
+    bench->UseManualTime();
+    for (auto size : kSizes) {
+      if (size >= slice) {
+        bench->Arg(static_cast<int>(size));
+      }
+    }
   }
 }
 }  // namespace
@@ -590,23 +615,23 @@ int main(int argc, char** argv) {
   RegisterBenchmarks<std::deque<Order>>("Deque/StdLowerBound", StdLowerBoundSearch);
 
   RegisterBenchmarks<VecDeque<Order>>("VecDeque/StdLowerBound", StdLowerBoundSearch);
-  RegisterBenchmarks<BlockOrderBook>("BlockOrderBook/StdLowerBound", StdLowerBoundSearch);
-  RegisterBulkCopyBenchmarks<std::vector<Order>>("Vector/BulkCopy");
-  RegisterBulkCopyBenchmarks<std::deque<Order>>("Deque/BulkCopy");
-  RegisterBulkCopyBenchmarks<VecDeque<Order>>("VecDeque/BulkCopy");
-  RegisterBulkCopyBenchmarks<BlockOrderBook>("BlockOrderBook/BulkCopy");
-  RegisterFixedSliceBulkCopyBenchmarks<std::vector<Order>>("Vector/BulkCopy");
-  RegisterFixedSliceBulkCopyBenchmarks<std::deque<Order>>("Deque/BulkCopy");
-  RegisterFixedSliceBulkCopyBenchmarks<VecDeque<Order>>("VecDeque/BulkCopy");
-  RegisterFixedSliceBulkCopyBenchmarks<BlockOrderBook>("BlockOrderBook/BulkCopy");
+  RegisterBenchmarks<OrderVolumeBreakdown>("VolumeBreakdown/Find", VolumeBreakdownFindSearch);
+  RegisterRangeViewBenchmarks<std::vector<Order>>("Vector");
+  RegisterRangeViewBenchmarks<std::deque<Order>>("Deque");
+  RegisterRangeViewBenchmarks<VecDeque<Order>>("VecDeque");
+  RegisterRangeViewBenchmarks<OrderVolumeBreakdown>("VolumeBreakdown");
+  RegisterFixedSliceRangeBenchmarks<std::vector<Order>>("Vector");
+  RegisterFixedSliceRangeBenchmarks<std::deque<Order>>("Deque");
+  RegisterFixedSliceRangeBenchmarks<VecDeque<Order>>("VecDeque");
+  RegisterFixedSliceRangeBenchmarks<OrderVolumeBreakdown>("VolumeBreakdown");
 
   RegisterRemoveBenchmarks<std::vector<Order>>("Vector/RemoveMiddle");
   RegisterRemoveBenchmarks<std::deque<Order>>("Deque/RemoveMiddle");
   RegisterRemoveBenchmarks<VecDeque<Order>>("VecDeque/RemoveMiddle");
-  RegisterRemoveBenchmarks<BlockOrderBook>("BlockOrderBook/RemoveMiddle");
+  RegisterRemoveBenchmarks<OrderVolumeBreakdown>("VolumeBreakdown/RemoveMiddle");
   RegisterSteadyPushPopBenchmarks<std::deque<Order>>("Deque/Steady");
   RegisterSteadyPushPopBenchmarks<VecDeque<Order>>("VecDeque/Steady");
-  RegisterSteadyPushPopBenchmarks<BlockOrderBook>("BlockOrderBook/Steady");
+  RegisterSteadyPushPopBenchmarks<OrderVolumeBreakdown>("VolumeBreakdown/Steady");
 
   ::benchmark::RunSpecifiedBenchmarks();
   ::benchmark::Shutdown();
